@@ -40,11 +40,11 @@ class Stepper {
         }
     }
     
-    let stepValue: UInt = 1
+    var stepValue: UInt = 1
     
     private(set) lazy var incrementButton: UIButton = {
         let button = UIButton(frame: .zero)
-        button.addAction(UIAction(handler: { [unowned self] _ in value += 1 }), for: .touchUpInside)
+        button.addAction(UIAction(handler: { [unowned self] _ in value += stepValue }), for: .touchUpInside)
         return button
     }()
 }
@@ -115,6 +115,17 @@ class StepperTests: XCTestCase {
         sut.simulateTapOnIncrementButton()
         
         XCTAssertEqual(sut.value, 1, "Expected value to be increased")
+    }
+    
+    func test_incrementButtonTap_increasesValueByStepValue() {
+        let sut = Stepper()
+        sut.maximumValue = 10
+        sut.value = 0
+        sut.stepValue = 5
+        
+        sut.simulateTapOnIncrementButton()
+        
+        XCTAssertEqual(sut.value, 5, "Expected value to be increased by step value")
     }
 }
 
