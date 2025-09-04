@@ -42,15 +42,23 @@ class Stepper {
     
     var stepValue: UInt = 1
     
-    private(set) lazy var incrementButton: UIButton = {
-        let button = UIButton(frame: .zero)
-        button.addAction(UIAction(handler: { [unowned self] _ in value += stepValue }), for: .touchUpInside)
-        return button
-    }()
+    private(set) lazy var incrementButton = makeButton(actionHandler: handleIncrementButtonTap())
+    private(set) lazy var decrementButton = makeButton(actionHandler: handleDecrementButtonTap())
     
-    private(set) lazy var decrementButton: UIButton = {
+    private func makeButton(actionHandler: @escaping () -> Void) -> UIButton {
         let button = UIButton(frame: .zero)
-        button.addAction(UIAction(handler: { [unowned self] _ in
+        button.addAction(UIAction(handler: { _ in actionHandler() }), for: .touchUpInside)
+        return button
+    }
+    
+    private func handleIncrementButtonTap() -> () -> Void {
+        { [unowned self] in
+            value += stepValue
+        }
+    }
+    
+    private func handleDecrementButtonTap() -> () -> Void {
+        { [unowned self] in
             let nextValue: Int = Int(value) - Int(stepValue)
             
             if nextValue < 0 {
@@ -58,9 +66,8 @@ class Stepper {
             } else {
                 value = UInt(nextValue)
             }
-        }), for: .touchUpInside)
-        return button
-    }()
+        }
+    }
 }
 
 class StepperTests: XCTestCase {
