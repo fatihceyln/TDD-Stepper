@@ -7,7 +7,7 @@
 
 import XCTest
 
-class Stepper {
+class Stepper: UIControl {
     var value: UInt = 0 {
         didSet {
             if value > maximumValue {
@@ -19,6 +19,7 @@ class Stepper {
             }
             
             textLabel.text = String(value)
+            sendActions(for: .valueChanged)
         }
     }
     
@@ -48,7 +49,8 @@ class Stepper {
     private(set) lazy var decrementButton = makeButton(actionHandler: handleDecrementButtonTap())
     private(set) lazy var textLabel = UILabel()
     
-    init() {
+    convenience init() {
+        self.init(frame: .zero)
         textLabel.text = String(value)
     }
     
@@ -131,6 +133,21 @@ class StepperTests: XCTestCase {
         sut.value = 1
         
         XCTAssertEqual(sut.value, 3, "Expected value to be limited by minimum value")
+    }
+    
+    func test_sendsValueChangedEvent_whenValueChanges() {
+        var eventCount = 0
+        let sut = makeSUT()
+        sut.addAction(UIAction(handler: { _ in eventCount += 1 }), for: .valueChanged)
+        
+        sut.value = 1
+        XCTAssertEqual(eventCount, 1)
+        
+        sut.simulateTapOnIncrementButton()
+        XCTAssertEqual(eventCount, 2)
+        
+        sut.simulateTapOnDecrementButton()
+        XCTAssertEqual(eventCount, 3)
     }
     
     // MARK: - Button Tests
