@@ -19,6 +19,7 @@ class Stepper {
             }
         }
     }
+    
     var minimumValue: UInt = 0 {
         didSet {
             if minimumValue > value {
@@ -30,6 +31,7 @@ class Stepper {
             }
         }
     }
+    
     var maximumValue: UInt = 10 {
         didSet {
             if maximumValue < minimumValue {
@@ -37,6 +39,7 @@ class Stepper {
             }
         }
     }
+    
     let stepValue: UInt = 1
 }
 
