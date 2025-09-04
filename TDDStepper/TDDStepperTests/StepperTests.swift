@@ -17,6 +17,8 @@ class Stepper {
             if value < minimumValue {
                 value = minimumValue
             }
+            
+            textLabel.text = String(value)
         }
     }
     
@@ -44,6 +46,11 @@ class Stepper {
     
     private(set) lazy var incrementButton = makeButton(actionHandler: handleIncrementButtonTap())
     private(set) lazy var decrementButton = makeButton(actionHandler: handleDecrementButtonTap())
+    private(set) lazy var textLabel = UILabel()
+    
+    init() {
+        textLabel.text = String(value)
+    }
     
     private func makeButton(actionHandler: @escaping () -> Void) -> UIButton {
         let button = UIButton(frame: .zero)
@@ -182,6 +189,21 @@ class StepperTests: XCTestCase {
         sut.stepValue = 3
         sut.simulateTapOnDecrementButton()
         XCTAssertEqual(sut.value, 0, "Expected value to be zero")
+    }
+    
+    // MARK: - Label Tests
+    func test_textLabel_rendersValue() {
+        let sut = makeSUT()
+        XCTAssertEqual(sut.textLabel.text, String(sut.value), "Default value")
+        
+        sut.value = 1
+        XCTAssertEqual(sut.textLabel.text, "1")
+        
+        sut.simulateTapOnIncrementButton()
+        XCTAssertEqual(sut.textLabel.text, "2")
+        
+        sut.simulateTapOnDecrementButton()
+        XCTAssertEqual(sut.textLabel.text, "1")
     }
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> Stepper {
