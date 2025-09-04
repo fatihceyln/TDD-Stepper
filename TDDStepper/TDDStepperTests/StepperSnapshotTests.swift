@@ -15,4 +15,13 @@ class StepperSnapshotTests: XCTestCase {
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE")
     }
+    
+    func test_maximumValue() {
+        let sut = Stepper()
+        sut.backgroundColor = .white
+        sut.sizeToFit()
+        sut.value = sut.maximumValue
+        
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MAXIMUM_VALUE")
+    }
 }
