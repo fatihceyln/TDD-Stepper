@@ -45,19 +45,40 @@ class Stepper: UIControl {
     
     var stepValue: UInt = 1
     
-    private(set) lazy var incrementButton = makeButton(actionHandler: handleIncrementButtonTap())
-    private(set) lazy var decrementButton = makeButton(actionHandler: handleDecrementButtonTap())
-    private(set) lazy var textLabel = UILabel()
+    private(set) lazy var decrementButton = makeButton(title: "-", actionHandler: handleDecrementButtonTap())
+    private(set) lazy var incrementButton = makeButton(title: "+", actionHandler: handleIncrementButtonTap())
+    private(set) lazy var textLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .callout)
+        return label
+    }()
+    
+    private lazy var borderLayer: CAShapeLayer = {
+        let borderLayer = CAShapeLayer()
+        borderLayer.fillColor = UIColor.white.cgColor
+        borderLayer.borderWidth = 1
+        borderLayer.borderColor = nil
+        borderLayer.strokeColor = UIColor.systemGray5.cgColor
+        layer.insertSublayer(borderLayer, at: 0)
+        return borderLayer
+    }()
     
     convenience init() {
         self.init(frame: .zero)
+        
         textLabel.text = String(value)
+        setupConstraints()
     }
     
-    private func makeButton(actionHandler: @escaping () -> Void) -> UIButton {
-        let button = UIButton(frame: .zero)
-        button.addAction(UIAction(handler: { _ in actionHandler() }), for: .touchUpInside)
-        return button
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        borderLayer.frame = bounds
+        borderLayer.path = UIBezierPath(roundedRect: bounds.inset(by: UIEdgeInsets(top: 0.5, left: 0.5, bottom: 0.5, right: 0.5)), cornerRadius: 18).cgPath
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        CGSize(width: 100, height: 50)
     }
     
     private func handleIncrementButtonTap() -> () -> Void {
@@ -77,6 +98,40 @@ class Stepper: UIControl {
             }
         }
     }
+}
+
+extension Stepper {
+    private func setupConstraints() {
+        addSubview(decrementButton)
+        addSubview(textLabel)
+        addSubview(incrementButton)
+        
+        [decrementButton, textLabel, incrementButton].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        NSLayoutConstraint.activate([
+            decrementButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            decrementButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            decrementButton.widthAnchor.constraint(equalToConstant: 32),
+            decrementButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            textLabel.leadingAnchor.constraint(equalTo: decrementButton.trailingAnchor, constant: 4),
+            textLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            textLabel.trailingAnchor.constraint(equalTo: incrementButton.leadingAnchor, constant: -4),
+            
+            incrementButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            incrementButton.widthAnchor.constraint(equalToConstant: 32),
+            incrementButton.heightAnchor.constraint(equalToConstant: 32),
+        ])
+    }
+    
+    private func makeButton(title: String, actionHandler: @escaping () -> Void) -> UIButton {
+        let button = UIButton(frame: .zero)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: [.foregroundColor: UIColor.label, .font: UIFont.preferredFont(forTextStyle: .subheadline)]), for: .normal)
+        button.addAction(UIAction(handler: { _ in actionHandler() }), for: .touchUpInside)
+        button.backgroundColor = .systemGray5
+        button.layer.cornerRadius = 16
+        return button
+    }
+    
 }
 
 class StepperTests: XCTestCase {
