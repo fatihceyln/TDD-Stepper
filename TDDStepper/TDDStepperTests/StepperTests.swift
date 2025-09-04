@@ -50,7 +50,7 @@ class StepperTests: XCTestCase {
         XCTAssertEqual(sut.stepValue, 1, "Default step value")
     }
     
-    func test_setMinimumValue_updatesValueToMinimumValue_whenMinimumValueIsGreaterThanValue() {
+    func test_setMinimumValueBeyondValue_matchesValueWithMinimumValue() {
         let sut = Stepper()
         sut.value = 1
         
@@ -59,7 +59,7 @@ class StepperTests: XCTestCase {
         XCTAssertEqual(sut.value, 5, "Expected value to be equal with minimum value")
     }
     
-    func test_setMinimumValue_overMaximumValue_updatesMaximumValueToMatchWithMinimum() {
+    func test_setMinimumValueBeyonMaximumValue_matchesMaximumValueWithMinimum() {
         let sut = Stepper()
         sut.maximumValue = 1
         
@@ -68,7 +68,7 @@ class StepperTests: XCTestCase {
         XCTAssertEqual(sut.maximumValue, 20, "Expected maximum value to be equal with minimum value")
     }
     
-    func test_setMaximumValue_belowMinimumValue_updatesMinimumValueToMatchWithMaximum() {
+    func test_setMaximumValueBelowMinimumValue_matchesMinimumValueWithMaximum() {
         let sut = Stepper()
         sut.minimumValue = 5
         
