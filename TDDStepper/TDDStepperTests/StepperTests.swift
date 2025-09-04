@@ -14,9 +14,13 @@ class Stepper {
             if minimumValue > value {
                 value = minimumValue
             }
+            
+            if minimumValue > maximumValue {
+                maximumValue = minimumValue
+            }
         }
     }
-    let maximumValue: UInt = 10
+    var maximumValue: UInt = 10
     let stepValue: UInt = 1
 }
 
@@ -36,5 +40,13 @@ class StepperTests: XCTestCase {
         sut.minimumValue = 5
         
         XCTAssertEqual(sut.value, 5, "Expected value to be equal with minimum value")
+    }
+    
+    func test_setMinimumValue_overMaximumValue_updatesMaximumValueToMatchWithMinimum() {
+        let sut = Stepper()
+        
+        sut.minimumValue = 20
+        
+        XCTAssertEqual(sut.maximumValue, 20, "Expected maximum value to be equal with minimum value")
     }
 }
