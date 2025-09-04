@@ -13,6 +13,10 @@ class Stepper {
             if value > maximumValue {
                 value = maximumValue
             }
+            
+            if value < minimumValue {
+                value = minimumValue
+            }
         }
     }
     var minimumValue: UInt = 0 {
@@ -78,5 +82,14 @@ class StepperTests: XCTestCase {
         sut.value = 10
         
         XCTAssertEqual(sut.value, 5, "Expected value to be limited by maximum value")
+    }
+    
+    func test_setValueBelowMinimum_limitsValueToMinimum() {
+        let sut = Stepper()
+        sut.minimumValue = 3
+        
+        sut.value = 1
+        
+        XCTAssertEqual(sut.value, 3, "Expected value to be limited by minimum value")
     }
 }
