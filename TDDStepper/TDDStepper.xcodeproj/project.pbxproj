@@ -6,14 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3D0FEF302E69AE010032190F /* TDDStepper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FEF0C2E69AD940032190F /* TDDStepper.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3D0FEF312E69AE010032190F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D0FEF032E69AD940032190F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D0FEF0B2E69AD940032190F;
+			remoteInfo = TDDStepper;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		3D0FEF0C2E69AD940032190F /* TDDStepper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TDDStepper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D0FEF2C2E69AE010032190F /* TDDStepperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TDDStepperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3D0FEF0E2E69AD940032190F /* TDDStepper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TDDStepper;
+			sourceTree = "<group>";
+		};
+		3D0FEF2D2E69AE010032190F /* TDDStepperTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TDDStepperTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,6 +46,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D0FEF292E69AE010032190F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D0FEF302E69AE010032190F /* TDDStepper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -33,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				3D0FEF0E2E69AD940032190F /* TDDStepper */,
+				3D0FEF2D2E69AE010032190F /* TDDStepperTests */,
 				3D0FEF0D2E69AD940032190F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				3D0FEF0C2E69AD940032190F /* TDDStepper.framework */,
+				3D0FEF2C2E69AE010032190F /* TDDStepperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,6 +111,29 @@
 			productReference = 3D0FEF0C2E69AD940032190F /* TDDStepper.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		3D0FEF2B2E69AE010032190F /* TDDStepperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D0FEF352E69AE010032190F /* Build configuration list for PBXNativeTarget "TDDStepperTests" */;
+			buildPhases = (
+				3D0FEF282E69AE010032190F /* Sources */,
+				3D0FEF292E69AE010032190F /* Frameworks */,
+				3D0FEF2A2E69AE010032190F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D0FEF322E69AE010032190F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3D0FEF2D2E69AE010032190F /* TDDStepperTests */,
+			);
+			name = TDDStepperTests;
+			packageProductDependencies = (
+			);
+			productName = TDDStepperTests;
+			productReference = 3D0FEF2C2E69AE010032190F /* TDDStepperTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +145,9 @@
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					3D0FEF0B2E69AD940032190F = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					3D0FEF2B2E69AE010032190F = {
 						CreatedOnToolsVersion = 16.4;
 					};
 				};
@@ -111,12 +167,20 @@
 			projectRoot = "";
 			targets = (
 				3D0FEF0B2E69AD940032190F /* TDDStepper */,
+				3D0FEF2B2E69AE010032190F /* TDDStepperTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3D0FEF0A2E69AD940032190F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D0FEF2A2E69AE010032190F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -133,7 +197,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D0FEF282E69AE010032190F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D0FEF322E69AE010032190F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D0FEF0B2E69AD940032190F /* TDDStepper */;
+			targetProxy = 3D0FEF312E69AE010032190F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3D0FEF112E69AD940032190F /* Debug */ = {
@@ -329,6 +408,38 @@
 			};
 			name = Release;
 		};
+		3D0FEF332E69AE010032190F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5CYVKDSSNH;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatih.TDDStepperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3D0FEF342E69AE010032190F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5CYVKDSSNH;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatih.TDDStepperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -346,6 +457,15 @@
 			buildConfigurations = (
 				3D0FEF142E69AD940032190F /* Debug */,
 				3D0FEF152E69AD940032190F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D0FEF352E69AE010032190F /* Build configuration list for PBXNativeTarget "TDDStepperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D0FEF332E69AE010032190F /* Debug */,
+				3D0FEF342E69AE010032190F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
