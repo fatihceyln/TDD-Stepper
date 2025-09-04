@@ -80,7 +80,8 @@ class Stepper: UIControl {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        CGSize(width: 100, height: 50)
+        let fittingSize = systemLayoutSizeFitting(CGSize(width: -1, height: 50), withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
+        return fittingSize
     }
     
     private func updateButtons() {
@@ -121,6 +122,7 @@ extension Stepper {
         addSubview(incrementButton)
         
         [decrementButton, textLabel, incrementButton].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        
         NSLayoutConstraint.activate([
             decrementButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             decrementButton.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -134,6 +136,7 @@ extension Stepper {
             incrementButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             incrementButton.widthAnchor.constraint(equalToConstant: 32),
             incrementButton.heightAnchor.constraint(equalToConstant: 32),
+            incrementButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
         ])
     }
     
@@ -145,7 +148,6 @@ extension Stepper {
         button.layer.cornerRadius = 16
         return button
     }
-    
 }
 
 class StepperTests: XCTestCase {
