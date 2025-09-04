@@ -8,11 +8,11 @@
 import XCTest
 
 class StepperSnapshotTests: XCTestCase {
-    func test_defaultValues() {
+    func test_minimumValue() {
         let sut = Stepper()
         sut.backgroundColor = .white
         sut.sizeToFit()
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "DEFAULT_VALUES")
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE")
     }
 }
