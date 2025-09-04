@@ -19,6 +19,7 @@ class Stepper: UIControl {
             }
             
             textLabel.text = String(value)
+            updateButtons()
             sendActions(for: .valueChanged)
         }
     }
@@ -67,6 +68,7 @@ class Stepper: UIControl {
         self.init(frame: .zero)
         
         textLabel.text = String(value)
+        updateButtons()
         setupConstraints()
     }
     
@@ -79,6 +81,18 @@ class Stepper: UIControl {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         CGSize(width: 100, height: 50)
+    }
+    
+    private func updateButtons() {
+        func backgroundColor(for button: UIButton) -> UIColor {
+            button.isEnabled ? .systemGray5 : .systemGray6
+        }
+        
+        decrementButton.isEnabled = value > minimumValue
+        incrementButton.isEnabled = value < maximumValue
+        
+        decrementButton.backgroundColor = backgroundColor(for: decrementButton)
+        incrementButton.backgroundColor = backgroundColor(for: incrementButton)
     }
     
     private func handleIncrementButtonTap() -> () -> Void {
