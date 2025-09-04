@@ -73,7 +73,7 @@ class Stepper {
 class StepperTests: XCTestCase {
     // MARK: - Behavior tests
     func test_defaultValues() {
-        let sut = Stepper()
+        let sut = makeSUT()
         
         XCTAssertEqual(sut.value, 0, "Default value")
         XCTAssertEqual(sut.minimumValue, 0, "Default minimum value")
@@ -82,7 +82,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_setMinimumValueBeyondValue_matchesValueWithMinimumValue() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.value = 1
         
         sut.minimumValue = 5
@@ -91,7 +91,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_setMinimumValueBeyonMaximumValue_matchesMaximumValueWithMinimum() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 1
         
         sut.minimumValue = 20
@@ -100,7 +100,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_setMaximumValueBelowMinimumValue_matchesMinimumValueWithMaximum() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.minimumValue = 5
         
         sut.maximumValue = 1
@@ -109,7 +109,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_setValueBeyondMaximum_limitsValueToMaximum() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 5
         
         sut.value = 10
@@ -118,7 +118,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_setValueBelowMinimum_limitsValueToMinimum() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.minimumValue = 3
         
         sut.value = 1
@@ -129,7 +129,7 @@ class StepperTests: XCTestCase {
     // MARK: - Button Tests
     
     func test_incrementButtonTap_increasesValue() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 10
         sut.value = 0
         
@@ -139,7 +139,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_incrementButtonTap_increasesValueByStepValue() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 10
         sut.value = 0
         sut.stepValue = 5
@@ -150,7 +150,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_decrementButtonTap_decrementsValue() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 10
         sut.value = 3
         
@@ -160,7 +160,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_decrementButtonTap_decrementsValueByStepValue() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.maximumValue = 10
         sut.value = 10
         sut.stepValue = 5
@@ -171,7 +171,7 @@ class StepperTests: XCTestCase {
     }
     
     func test_decrementButtonTap_doesNotDecrementsValueToNegative() {
-        let sut = Stepper()
+        let sut = makeSUT()
         sut.minimumValue = 0
         sut.value = 0
         
@@ -182,6 +182,14 @@ class StepperTests: XCTestCase {
         sut.stepValue = 3
         sut.simulateTapOnDecrementButton()
         XCTAssertEqual(sut.value, 0, "Expected value to be zero")
+    }
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> Stepper {
+        let sut = Stepper()
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut, "Expected sut to be nil. Potential memory leak.", file: file, line: line)
+        }
+        return sut
     }
 }
 
