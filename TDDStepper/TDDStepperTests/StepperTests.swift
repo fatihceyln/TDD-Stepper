@@ -50,7 +50,15 @@ class Stepper {
     
     private(set) lazy var decrementButton: UIButton = {
         let button = UIButton(frame: .zero)
-        button.addAction(UIAction(handler: { [unowned self] _ in value -= stepValue }), for: .touchUpInside)
+        button.addAction(UIAction(handler: { [unowned self] _ in
+            let nextValue: Int = Int(value) - Int(stepValue)
+            
+            if nextValue < 0 {
+                value = .zero
+            } else {
+                value = UInt(nextValue)
+            }
+        }), for: .touchUpInside)
         return button
     }()
 }
@@ -153,6 +161,20 @@ class StepperTests: XCTestCase {
         sut.simulateTapOnDecrementButton()
         
         XCTAssertEqual(sut.value, 5, "Expected value to be decreased by step value")
+    }
+    
+    func test_decrementButtonTap_doesNotDecrementsValueToNegative() {
+        let sut = Stepper()
+        sut.minimumValue = 0
+        sut.value = 0
+        
+        sut.simulateTapOnDecrementButton()
+        XCTAssertEqual(sut.value, 0, "Expected not to change value")
+        
+        sut.value = 2
+        sut.stepValue = 3
+        sut.simulateTapOnDecrementButton()
+        XCTAssertEqual(sut.value, 0, "Expected value to be zero")
     }
 }
 
