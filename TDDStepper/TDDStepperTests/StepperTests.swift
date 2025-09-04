@@ -52,6 +52,7 @@ class StepperTests: XCTestCase {
     
     func test_setMinimumValue_updatesValueToMinimumValue_whenMinimumValueIsGreaterThanValue() {
         let sut = Stepper()
+        sut.value = 1
         
         sut.minimumValue = 5
         
@@ -60,6 +61,7 @@ class StepperTests: XCTestCase {
     
     func test_setMinimumValue_overMaximumValue_updatesMaximumValueToMatchWithMinimum() {
         let sut = Stepper()
+        sut.maximumValue = 1
         
         sut.minimumValue = 20
         
