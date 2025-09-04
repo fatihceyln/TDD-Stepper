@@ -206,6 +206,7 @@ class StepperTests: XCTestCase {
         XCTAssertEqual(sut.textLabel.text, "1")
     }
     
+    // MARK: - Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> Stepper {
         let sut = Stepper()
         addTeardownBlock { [weak sut] in
