@@ -17,4 +17,8 @@ class StepperButton: UIButton {
         
         layer.cornerRadius = bounds.width / 2
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        sendActions(for: .touchUpInside)
+    }
 }
