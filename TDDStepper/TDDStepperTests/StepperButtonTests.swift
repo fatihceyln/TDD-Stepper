@@ -9,6 +9,8 @@ import XCTest
 @testable import TDDStepper
 
 class StepperButtonTests: XCTestCase {
+    private var timer: TimerSpy?
+    
     func test_sendsEvent_whenTouchEnds() {
         var eventCount = 0
         let sut = StepperButton()
@@ -19,11 +21,7 @@ class StepperButtonTests: XCTestCase {
     }
     
     func test_requestsTimer_whenTouchStarts() {
-        var timer: TimerSpy?
-        let sut = StepperButton(timerProvider: { callback in
-            timer = TimerSpy(block: callback)
-            return timer!
-        })
+        let sut = makeSUT()
         
         sut.simulateTouchStart()
         XCTAssertNotNil(timer)
@@ -31,11 +29,7 @@ class StepperButtonTests: XCTestCase {
     
     func test_sendsEvent_whenTimerFires() {
         var eventCount = 0
-        var timer: TimerSpy?
-        let sut = StepperButton(timerProvider: { callback in
-            timer = TimerSpy(block: callback)
-            return timer!
-        })
+        let sut = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
         sut.simulateTouchStart()
         
@@ -47,6 +41,15 @@ class StepperButtonTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func makeSUT() -> StepperButton {
+        let sut = StepperButton(timerProvider: { [self] callback in
+            timer = TimerSpy(block: callback)
+            return timer!
+        })
+        return sut
+    }
+    
     private class TimerSpy: Timer {
         private var block: (() -> Void)?
         
