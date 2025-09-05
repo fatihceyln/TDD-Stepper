@@ -40,6 +40,20 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 2)
     }
     
+    func test_doesNotSendsEvent_whenTouchEndsAndTimerFires() {
+        var eventCount = 0
+        let sut = makeSUT()
+        sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
+        sut.simulateTouchStart()
+        
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1)
+        
+        sut.simulateTouchEnd()
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ends")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> StepperButton {
@@ -71,6 +85,10 @@ class StepperButtonTests: XCTestCase {
 extension StepperButton {
     func simulateTouchStart() {
         touchesBegan([], with: nil)
+    }
+    
+    func simulateTouchEnd() {
+        touchesEnded([], with: nil)
     }
     
     func simulateTap() {

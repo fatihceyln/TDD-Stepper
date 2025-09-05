@@ -17,6 +17,7 @@ class StepperButton: UIButton {
     
     private var timerProvider: TimerProvider?
     private var timer: Timer?
+    private var isContinuing = false
     
     convenience init(timerProvider: @escaping TimerProvider) {
         self.init()
@@ -31,11 +32,16 @@ class StepperButton: UIButton {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         timer = timerProvider?() { [self] in
+            isContinuing = true
             sendActions(for: .touchUpInside)
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        sendActions(for: .touchUpInside)
+        timer?.invalidate()
+        
+        if !isContinuing {
+            sendActions(for: .touchUpInside)
+        }
     }
 }
