@@ -83,7 +83,6 @@ class StepperTests: XCTestCase {
     
     func test_incrementButtonTap_increasesValue() {
         let sut = makeSUT()
-        sut.maximumValue = 10
         sut.value = 0
         
         sut.simulateTapOnIncrementButton()
@@ -93,7 +92,6 @@ class StepperTests: XCTestCase {
     
     func test_incrementButtonTap_increasesValueByStepValue() {
         let sut = makeSUT()
-        sut.maximumValue = 10
         sut.value = 0
         sut.stepValue = 5
         
@@ -104,7 +102,6 @@ class StepperTests: XCTestCase {
     
     func test_decrementButtonTap_decrementsValue() {
         let sut = makeSUT()
-        sut.maximumValue = 10
         sut.value = 3
         
         sut.simulateTapOnDecrementButton()
@@ -114,7 +111,6 @@ class StepperTests: XCTestCase {
     
     func test_decrementButtonTap_decrementsValueByStepValue() {
         let sut = makeSUT()
-        sut.maximumValue = 10
         sut.value = 10
         sut.stepValue = 5
         
@@ -125,11 +121,10 @@ class StepperTests: XCTestCase {
     
     func test_decrementButtonTap_doesNotDecrementsValueToNegative() {
         let sut = makeSUT()
-        sut.minimumValue = 0
         sut.value = 0
         
         sut.simulateTapOnDecrementButton()
-        XCTAssertEqual(sut.value, 0, "Expected not to change value")
+        XCTAssertEqual(sut.value, 0, "Expected value to be zero")
         
         sut.value = 2
         sut.stepValue = 3
