@@ -141,11 +141,9 @@ extension Stepper {
     }
     
     private func makeButton(title: String, actionHandler: @escaping () -> Void) -> UIButton {
-        let button = UIButton(frame: .zero)
+        let button = StepperButton(frame: .zero)
         button.setAttributedTitle(NSAttributedString(string: title, attributes: [.foregroundColor: UIColor.label, .font: UIFont.preferredFont(forTextStyle: .subheadline)]), for: .normal)
         button.addAction(UIAction(handler: { _ in actionHandler() }), for: .touchUpInside)
-        button.backgroundColor = .systemGray5
-        button.layer.cornerRadius = 16
         return button
     }
 }
