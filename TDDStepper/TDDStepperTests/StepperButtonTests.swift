@@ -109,6 +109,7 @@ extension StepperButton {
     }
     
     func simulateTap() {
+        touchesBegan([], with: nil)
         touchesEnded([], with: nil)
     }
 }
