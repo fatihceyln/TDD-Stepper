@@ -85,8 +85,6 @@ class Stepper: UIControl {
     }
     
     private func updateButtons() {
-        
-        
         decrementButton.isEnabled = value > minimumValue
         incrementButton.isEnabled = value < maximumValue
     }
