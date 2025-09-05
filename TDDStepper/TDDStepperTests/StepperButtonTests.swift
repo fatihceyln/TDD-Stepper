@@ -29,6 +29,23 @@ class StepperButtonTests: XCTestCase {
         XCTAssertNotNil(timer)
     }
     
+    func test_sendsEvent_whenTimerFires() {
+        var eventCount = 0
+        var timer: TimerSpy?
+        let sut = StepperButton(timerProvider: { callback in
+            timer = TimerSpy(block: callback)
+            return timer!
+        })
+        sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
+        sut.simulateTouchStart()
+        
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1)
+        
+        timer?.fire()
+        XCTAssertEqual(eventCount, 2)
+    }
+    
     // MARK: - Helpers
     private class TimerSpy: Timer {
         private var block: (() -> Void)?

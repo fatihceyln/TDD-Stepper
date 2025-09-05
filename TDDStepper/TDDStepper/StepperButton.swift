@@ -30,7 +30,9 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer = timerProvider?() {}
+        timer = timerProvider?() { [self] in
+            sendActions(for: .touchUpInside)
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
