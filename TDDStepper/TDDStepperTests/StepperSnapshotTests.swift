@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import TDDStepper
 
 class StepperSnapshotTests: XCTestCase {
     func test_minimumValue() {
