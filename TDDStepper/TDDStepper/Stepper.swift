@@ -85,15 +85,10 @@ class Stepper: UIControl {
     }
     
     private func updateButtons() {
-        func backgroundColor(for button: UIButton) -> UIColor {
-            button.isEnabled ? .systemGray5 : .systemGray6
-        }
+        
         
         decrementButton.isEnabled = value > minimumValue
         incrementButton.isEnabled = value < maximumValue
-        
-        decrementButton.backgroundColor = backgroundColor(for: decrementButton)
-        incrementButton.backgroundColor = backgroundColor(for: incrementButton)
     }
     
     private func handleIncrementButtonTap() -> () -> Void {

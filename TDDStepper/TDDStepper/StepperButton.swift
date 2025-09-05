@@ -12,6 +12,12 @@ class StepperButton: UIButton {
         CGSize(width: 32, height: 32)
     }
     
+    override var isEnabled: Bool {
+        didSet {
+            updateBackgroundColorByState()
+        }
+    }
+    
     typealias TimerCallback = () -> Void
     typealias TimerProvider = (@escaping TimerCallback) -> Timer?
     
@@ -45,5 +51,9 @@ class StepperButton: UIButton {
         
         guard !isContinuing else { return }
         sendActions(for: .touchUpInside)
+    }
+    
+    private func updateBackgroundColorByState() {
+        backgroundColor = isEnabled ? .systemGray5 : .systemGray6
     }
 }
