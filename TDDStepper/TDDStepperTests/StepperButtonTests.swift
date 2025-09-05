@@ -40,7 +40,7 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 2)
     }
     
-    func test_doesNotSendsEvent_whenTouchEndsAndTimerFires() {
+    func test_doesNotSendEvent_whenTouchEndsAndTimerFires() {
         var eventCount = 0
         let sut = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
