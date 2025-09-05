@@ -38,10 +38,12 @@ class StepperButton: UIButton {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer?.invalidate()
-        
-        if !isContinuing {
-            sendActions(for: .touchUpInside)
+        defer {
+            timer?.invalidate()
+            isContinuing = false
         }
+        
+        guard !isContinuing else { return }
+        sendActions(for: .touchUpInside)
     }
 }

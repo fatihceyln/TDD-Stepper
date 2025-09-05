@@ -54,6 +54,23 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ends")
     }
     
+    func test_sendsEventWhenSecondTapHappens_afterContinuation() {
+        var eventCount = 0
+        let sut = makeSUT()
+        sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
+        sut.simulateTouchStart()
+        
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1)
+        
+        sut.simulateTouchEnd()
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ends")
+        
+        sut.simulateTap()
+        XCTAssertEqual(eventCount, 2, "Expected to receive event when tap happens")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> StepperButton {
