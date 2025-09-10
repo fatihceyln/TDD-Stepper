@@ -17,6 +17,7 @@ class AcceleratingTimer {
     private let accelerationInterval: AccelerationInterval
     private let timers: [TimerProvider]
     
+    private var timerIndex = 0
     private(set) var timer: Timer?
     
     init(accelerationInterval: AccelerationInterval, timers: [TimerProvider]) throws {
@@ -26,8 +27,17 @@ class AcceleratingTimer {
     }
     
     func schedule() {
-        timer = timers.first?({ [self] in
-            timer = timers.last?({})
+        timer = timers[timerIndex]({ [self] in
+            scheduleNextTimer()
+        })
+    }
+    
+    private func scheduleNextTimer() {
+        timerIndex += 1
+        let lastIndex = timers.count
+        guard timerIndex < lastIndex else { return }
+        timer = timers[timerIndex]({ [self] in
+            scheduleNextTimer()
         })
     }
 }
@@ -71,8 +81,38 @@ class AcceleratingTimerTests: XCTestCase {
         firstTimer.fire()
         XCTAssertEqual(sut.timer, secondTimer)
     }
-    // MARK: - Helpers
     
+    func test_schedule_requestsThirdTimerAfterSecondTimerFires() throws {
+        var firstTimer: TimerSpy?
+        var secondTimer: TimerSpy?
+        var thirdTimer: TimerSpy?
+        
+        let sut = try makeSUT(timers: [
+            { callback in
+                firstTimer = TimerSpy(callback: callback)
+                return firstTimer!
+            },
+            { callback in
+                secondTimer = TimerSpy(callback: callback)
+                return secondTimer!
+            },
+            { callback in
+                thirdTimer = TimerSpy(callback: callback)
+                return thirdTimer!
+            },
+        ])
+        
+        sut.schedule()
+        XCTAssertEqual(sut.timer, firstTimer)
+        
+        firstTimer?.fire()
+        XCTAssertEqual(sut.timer, secondTimer)
+        
+        secondTimer?.fire()
+        XCTAssertEqual(sut.timer, thirdTimer)
+    }
+    
+    // MARK: - Helpers
     private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [AcceleratingTimer.TimerProvider]) throws -> AcceleratingTimer {
         let sut = try AcceleratingTimer(accelerationInterval: accelerationInterval, timers: timers)
         return sut
