@@ -14,7 +14,7 @@ class StepperButton: UIButton {
     
     override var isEnabled: Bool {
         didSet {
-            updateBackgroundColorByState()
+            backgroundColor = isEnabled ? .systemGray5 : .systemGray6
         }
     }
     
@@ -62,9 +62,5 @@ class StepperButton: UIButton {
         
         guard continuation.isContinuing == false else { return }
         sendActions(for: .touchUpInside)
-    }
-    
-    private func updateBackgroundColorByState() {
-        backgroundColor = isEnabled ? .systemGray5 : .systemGray6
     }
 }
