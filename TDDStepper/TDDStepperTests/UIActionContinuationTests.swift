@@ -64,6 +64,24 @@ class UIActionContinuationTests: XCTestCase {
         XCTAssertEqual(eventCount, 1, "Expected not to receive another event when continuation is invalidated and timer fires")
     }
     
+    func test_isContinuing_stateChanges() {
+        var timer: TimerSpy?
+        let sut = UIActionContinuation(timerProvider: { action in
+            timer = TimerSpy(callback: action)
+            return timer!
+        })
+        XCTAssertFalse(sut.isContinuing, "Precondition")
+        
+        sut.schedule {}
+        XCTAssertFalse(sut.isContinuing, "Expected not to change state before timer fires")
+        
+        timer?.fire()
+        XCTAssertTrue(sut.isContinuing, "Expected state to be true after timer fires")
+
+        sut.invalidate()
+        XCTAssertFalse(sut.isContinuing, "Expected state to be false after invalidation")
+    }
+    
     // MARK: - Helpers
     private final class TimerSpy: Timer {
         private var callback: (() -> Void)?
