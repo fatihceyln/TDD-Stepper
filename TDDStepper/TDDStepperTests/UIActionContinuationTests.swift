@@ -12,15 +12,15 @@ class UIActionContinuationTests: XCTestCase {
     func test_init_doesNotScheduleTimer() {
         let (_, timer) = makeSUT()
         
-        XCTAssertEqual(timer.scheduleCallCount, .zero, "Expected not to call schedule after creation")
+        XCTAssertFalse(timer.isScheduled, "Expected timer to be not scheduled upon creation")
     }
     
-    func test_schedule_requestsTimer() {
+    func test_schedule_schedulesTimer() {
         let (sut, timer) = makeSUT()
         
         sut.schedule {}
         
-        XCTAssertNotNil(timer, "Expected timer to be requested after schedule command")
+        XCTAssertTrue(timer.isScheduled, "Expected timer to be scheduled after schedule command")
     }
     
     func test_schedule_notifiesHandlerWhenTimerFires() {
@@ -70,11 +70,11 @@ class UIActionContinuationTests: XCTestCase {
     }
     
     private final class TimerSpy: NSObject, UIActionTimer {
-        private(set) var scheduleCallCount = 0
         private var action: ((TimerSpy) -> Void)?
         
+        var isScheduled: Bool { action != nil }
+        
         func schedule(action: @escaping (UIActionTimer) -> Void) {
-            scheduleCallCount += 1
             self.action = action
         }
         
