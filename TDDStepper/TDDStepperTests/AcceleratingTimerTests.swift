@@ -31,19 +31,15 @@ class AcceleratingTimer {
         let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]
         timer?.schedule(action: { [self] _ in
-            if !isLastTimer(), CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
-                scheduleNextTimer()
-            } else {
-                action()
+            action()
+            
+            if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
+                scheduleNextTimer(action: action)
             }
         })
     }
     
-    private func isLastTimer() -> Bool {
-        timerIndex == timers.endIndex - 1
-    }
-    
-    private func scheduleNextTimer() {
+    private func scheduleNextTimer(action: @escaping () -> Void) {
         timerIndex += 1
         let lastIndex = timers.count
         guard timerIndex < lastIndex else { return }
@@ -51,8 +47,10 @@ class AcceleratingTimer {
         let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]
         timer?.schedule(action: { [self] _ in
+            action()
+            
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
-                scheduleNextTimer()
+                scheduleNextTimer(action: action)
             }
         })
     }
@@ -153,6 +151,25 @@ class AcceleratingTimerTests: XCTestCase {
         XCTAssertEqual(eventCount, 3)
     }
     
+    func test_schedule_notifiesHandlerWhenBothTimerFiresInOrder() throws {
+        var eventCount = 0
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer])
+        sut.schedule { eventCount += 1 }
+
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 1)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 2)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 3)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 4)
+    }
     
     // MARK: - Helpers
     private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingTimer {
