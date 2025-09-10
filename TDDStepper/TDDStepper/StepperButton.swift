@@ -7,6 +7,11 @@
 
 import UIKit
 
+private final class NullUIActionTimer: UIActionTimer {
+    func schedule(action: @escaping (any UIActionTimer) -> Void) {}
+    func invalidate() {}
+}
+
 class StepperButton: UIButton {
     override var intrinsicContentSize: CGSize {
         CGSize(width: 32, height: 32)
@@ -25,11 +30,7 @@ class StepperButton: UIButton {
         }
     }
     
-    private lazy var continuation = UIActionContinuation(timerProvider: { action in
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-            action()
-        })
-    })
+    private lazy var continuation = UIActionContinuation(timer: NullUIActionTimer())
     
     var isContinuous = true
     

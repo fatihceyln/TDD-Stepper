@@ -9,8 +9,6 @@ import XCTest
 @testable import TDDStepper
 
 class StepperButtonTests: XCTestCase {
-    private var timer: TimerSpy?
-    
     func test_sendsEvent_uponTap() {
         var eventCount = 0
         let sut = StepperButton()
@@ -20,58 +18,58 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 1)
     }
     
-    func test_requestsTimer_whenTouchStarts() {
-        let sut = makeSUT()
+    func test_schedulesTimer_uponTouch() {
+        let (sut, timer) = makeSUT()
         
         sut.simulateTouchStart()
-        XCTAssertNotNil(timer)
+        XCTAssertEqual(timer.scheduleCallCount, 1)
     }
     
-    func test_doesNotRequestsTimer_whenNotContinious() {
-        let sut = makeSUT(isContinuous: false)
+    func test_touchStart_doesNotScheduleTimerWhenButtonIsNonContinuous() {
+        let (sut, timer) = makeSUT(isContinuous: false)
         
         sut.simulateTouchStart()
-        XCTAssertNil(timer)
+        XCTAssertEqual(timer.scheduleCallCount, .zero)
     }
     
     func test_sendsEvent_whenTimerFires() {
         var eventCount = 0
-        let sut = makeSUT()
+        let (sut, timer) = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
         sut.simulateTouchStart()
         
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1)
         
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 2)
     }
     
     func test_doesNotSendEvent_whenTimerFiresAfterTouchEnds() {
         var eventCount = 0
-        let sut = makeSUT()
+        let (sut, timer) = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
         sut.simulateTouchStart()
         
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1)
         
         sut.simulateTouchEnd()
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ended")
     }
     
     func test_sendsEventWhenTapOccurs_afterTouchEnds() {
         var eventCount = 0
-        let sut = makeSUT()
+        let (sut, timer) = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
         sut.simulateTouchStart()
         
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1)
         
         sut.simulateTouchEnd()
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ended")
         
         sut.simulateTap()
@@ -79,7 +77,7 @@ class StepperButtonTests: XCTestCase {
     }
     
     func test_isHighlighted_stateChanges() {
-        let sut = makeSUT()
+        let (sut, _) = makeSUT()
         XCTAssertFalse(sut.isHighlighted, "Precondition")
         
         sut.simulateTouchStart()
@@ -94,32 +92,31 @@ class StepperButtonTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> StepperButton {
-        let sut = StepperButton(continuation: UIActionContinuation(timerProvider: { [self] action in
-            timer = TimerSpy(block: action)
-            return timer!
-        }))
+    private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> (sut: StepperButton, timer: TimerSpy) {
+        let timer = TimerSpy()
+        let sut = StepperButton(continuation: UIActionContinuation(timer: timer))
         sut.isContinuous = isContinuous
         addTeardownBlock { [weak sut] in
             XCTAssertNil(sut, "Expected instance to be nil. Potential memory leak.", file: file, line: line)
         }
-        return sut
+        return (sut, timer)
     }
     
-    private class TimerSpy: Timer {
-        private var block: (() -> Void)?
+    private class TimerSpy: UIActionTimer {
+        private(set) var scheduleCallCount = 0
+        private var action: ((UIActionTimer) -> Void)?
         
-        convenience init(block: @escaping () -> Void) {
-            self.init()
-            self.block = block
+        func schedule(action: @escaping (any UIActionTimer) -> Void) {
+            scheduleCallCount += 1
+            self.action = action
         }
         
-        override func fire() {
-            block?()
+        func invalidate() {
+            action = nil
         }
         
-        override func invalidate() {
-            block = nil
+        func fire() {
+            action?(self)
         }
     }
 }

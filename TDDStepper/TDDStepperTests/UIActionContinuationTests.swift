@@ -9,22 +9,14 @@ import XCTest
 @testable import TDDStepper
 
 class UIActionContinuationTests: XCTestCase {
-    func test_init_doesNotRequestsTimerUponCreation() {
-        var timer: TimerSpy?
-        let _ = UIActionContinuation(timerProvider: { action in
-            timer = TimerSpy(callback: action)
-            return timer!
-        })
+    func test_init_doesNotScheduleTimer() {
+        let (_, timer) = makeSUT()
         
-        XCTAssertNil(timer, "Expected not to be requested a timer upon creation")
+        XCTAssertEqual(timer.scheduleCallCount, .zero, "Expected not to call schedule after creation")
     }
     
     func test_schedule_requestsTimer() {
-        var timer: TimerSpy?
-        let sut = UIActionContinuation(timerProvider: { action in
-            timer = TimerSpy(callback: action)
-            return timer!
-        })
+        let (sut, timer) = makeSUT()
         
         sut.schedule {}
         
@@ -33,49 +25,37 @@ class UIActionContinuationTests: XCTestCase {
     
     func test_schedule_notifiesHandlerWhenTimerFires() {
         var eventCount = 0
-        var timer: TimerSpy?
-        let sut = UIActionContinuation(timerProvider: { action in
-            timer = TimerSpy(callback: action)
-            return timer!
-        })
+        let (sut, timer) = makeSUT()
         
         sut.schedule { eventCount += 1 }
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1, "Expected to receive an event when timer fires")
         
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 2, "Expected to receive another event when timer fires again")
     }
     
     func test_invalidateAfterSchedule_doesNotNotifyHandlerWhenTimerFires() {
         var eventCount = 0
-        var timer: TimerSpy?
-        let sut = UIActionContinuation(timerProvider: { action in
-            timer = TimerSpy(callback: action)
-            return timer!
-        })
+        let (sut, timer) = makeSUT()
         
         sut.schedule { eventCount += 1 }
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1, "Expected to receive an event when timer fires")
         
         sut.invalidate()
-        timer?.fire()
+        timer.fire()
         XCTAssertEqual(eventCount, 1, "Expected not to receive another event when continuation is invalidated and timer fires")
     }
     
     func test_isContinuing_stateChanges() {
-        var timer: TimerSpy?
-        let sut = UIActionContinuation(timerProvider: { action in
-            timer = TimerSpy(callback: action)
-            return timer!
-        })
+        let (sut, timer) = makeSUT()
         XCTAssertFalse(sut.isContinuing, "Precondition")
         
         sut.schedule {}
         XCTAssertFalse(sut.isContinuing, "Expected not to change state before timer fires")
         
-        timer?.fire()
+        timer.fire()
         XCTAssertTrue(sut.isContinuing, "Expected state to be true after timer fires")
 
         sut.invalidate()
@@ -83,20 +63,27 @@ class UIActionContinuationTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private final class TimerSpy: Timer {
-        private var callback: (() -> Void)?
+    private func makeSUT() -> (sut: UIActionContinuation, timer: TimerSpy) {
+        let timer = TimerSpy()
+        let sut = UIActionContinuation(timer: timer)
+        return (sut, timer)
+    }
+    
+    private final class TimerSpy: UIActionTimer {
+        private(set) var scheduleCallCount = 0
+        private var action: ((TimerSpy) -> Void)?
         
-        convenience init(callback: @escaping () -> Void) {
-            self.init()
-            self.callback = callback
+        func schedule(action: @escaping (UIActionTimer) -> Void) {
+            scheduleCallCount += 1
+            self.action = action
         }
         
-        override func fire() {
-            callback?()
+        func invalidate() {
+            action = nil
         }
         
-        override func invalidate() {
-            callback = nil
+        func fire() {
+            action?(self)
         }
     }
 }

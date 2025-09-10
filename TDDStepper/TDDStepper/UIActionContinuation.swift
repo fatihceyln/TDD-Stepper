@@ -8,18 +8,15 @@
 import Foundation
 
 class UIActionContinuation {
-    typealias TimerProvider = (@escaping () -> Void) -> Timer
-    private let timerProvider: TimerProvider
-    private var timer: Timer?
-    
+    private let timer: UIActionTimer
     private(set) var isContinuing = false
     
-    init(timerProvider: @escaping TimerProvider) {
-        self.timerProvider = timerProvider
+    init(timer: UIActionTimer) {
+        self.timer = timer
     }
     
     func schedule(continuation handler: @escaping () -> Void) {
-        timer = timerProvider({ [self] in
+        timer.schedule(action: { [self] _ in
             isContinuing = true
             handler()
         })
@@ -27,8 +24,6 @@ class UIActionContinuation {
     
     func invalidate() {
         isContinuing = false
-        
-        timer?.invalidate()
-        timer = nil
+        timer.invalidate()
     }
 }
