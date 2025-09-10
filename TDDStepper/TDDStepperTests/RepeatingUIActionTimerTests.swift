@@ -22,7 +22,9 @@ final class RepeatingUIActionTimer: UIActionTimer {
         })
     }
     
-    func invalidate() {}
+    func invalidate() {
+        timer?.invalidate()
+    }
 }
 
 class RepeatingUIActionTimerTests: XCTestCase {
@@ -46,5 +48,13 @@ class RepeatingUIActionTimerTests: XCTestCase {
         XCTAssertTrue(timer.isValid)
     }
     
+    func test_invalidateAfterSchedule_invalidatesTimer() throws {
+        let sut = RepeatingUIActionTimer()
+        
+        sut.schedule(action: { _ in })
+        let timer = try XCTUnwrap(sut.timer)
+        
+        sut.invalidate()
+        XCTAssertFalse(timer.isValid)
     }
 }
