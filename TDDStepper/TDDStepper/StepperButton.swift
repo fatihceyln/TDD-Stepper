@@ -18,16 +18,12 @@ class StepperButton: UIButton {
         }
     }
     
-    typealias TimerCallback = () -> Void
-    typealias TimerProvider = (@escaping TimerCallback) -> Timer?
-    
-    private var timerProvider: TimerProvider?
-    private var timer: Timer?
+    private var continuation: UIActionContinuation?
     private var isContinuing = false
     
-    convenience init(timerProvider: @escaping TimerProvider) {
+    convenience init(continuation: UIActionContinuation) {
         self.init()
-        self.timerProvider = timerProvider
+        self.continuation = continuation
     }
 
     override func layoutSubviews() {
@@ -37,16 +33,16 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer = timerProvider?() { [weak self] in
+        continuation?.schedule(continuation: { [weak self] in
             guard let self else { return }
             isContinuing = true
             sendActions(for: .touchUpInside)
-        }
+        })
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         defer {
-            timer?.invalidate()
+            continuation?.invalidate()
             isContinuing = false
         }
         
