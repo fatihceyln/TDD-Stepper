@@ -12,7 +12,10 @@ class StepperSnapshotTests: XCTestCase {
     func test_minimumValue() {
         let sut = makeSUT()
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE")
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE_light")
+        
+        sut.backgroundColor = .black
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MINIMUM_VALUE_dark")
     }
     
     func test_maximumValue() {
@@ -20,7 +23,10 @@ class StepperSnapshotTests: XCTestCase {
             $0.value = $0.maximumValue
         })
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MAXIMUM_VALUE")
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MAXIMUM_VALUE_light")
+        
+        sut.backgroundColor = .black
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MAXIMUM_VALUE_dark")
     }
     
     func test_valueBetweenLimits() {
@@ -28,7 +34,10 @@ class StepperSnapshotTests: XCTestCase {
             $0.value = 2
         })
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "VALUE_BETWEEN_LIMITS")
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "VALUE_BETWEEN_LIMITS_light")
+        
+        sut.backgroundColor = .black
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "VALUE_BETWEEN_LIMITS_dark")
     }
     
     // MARK: - Helpers

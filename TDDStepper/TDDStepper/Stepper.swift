@@ -56,14 +56,18 @@ class Stepper: UIControl {
     
     private lazy var borderLayer: CAShapeLayer = {
         let borderLayer = CAShapeLayer()
-        borderLayer.fillColor = UIColor.white.cgColor
         borderLayer.borderWidth = 1
         borderLayer.borderColor = nil
-        borderLayer.strokeColor = UIColor.systemGray5.cgColor
         layer.insertSublayer(borderLayer, at: 0)
         return borderLayer
     }()
     
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        borderLayer.fillColor = UIColor.systemBackground.cgColor
+        borderLayer.strokeColor = UIColor.systemGray5.cgColor
+    }
+
     convenience init() {
         self.init(frame: .zero)
         
