@@ -9,24 +9,15 @@ import XCTest
 @testable import TDDStepper
 
 final class RepeatingUIActionTimer: UIActionTimer {
-    struct TimerSpecs {
-        let timeInterval: TimeInterval
-        let repeats: Bool
-        
-        static func `default`() -> TimerSpecs {
-            TimerSpecs(timeInterval: 1, repeats: true)
-        }
-    }
-    
     private(set) var timer: Timer?
-    let specs: TimerSpecs
+    let timeInterval: TimeInterval
     
-    init(specs: TimerSpecs = .default()) {
-        self.specs = specs
+    init(timeInterval: TimeInterval = 0.5) {
+        self.timeInterval = timeInterval
     }
     
     func schedule(action: @escaping (any UIActionTimer) -> Void) {
-        timer = Timer.scheduledTimer(withTimeInterval: specs.timeInterval, repeats: specs.repeats, block: { [self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { [self] _ in
             action(self)
         })
     }
@@ -40,18 +31,16 @@ class RepeatingUIActionTimerTests: XCTestCase {
         XCTAssertNil(sut.timer)
     }
     
-    func test_initWithDefaultSpecs() {
+    func test_initWithDefaultTimeInterval() {
         let sut = RepeatingUIActionTimer()
-        XCTAssertEqual(sut.specs.timeInterval, 1)
-        XCTAssertTrue(sut.specs.repeats)
+        XCTAssertEqual(sut.timeInterval, 0.5)
     }
     
-    func test_schedule_schedulesTimerWithSpecs() {
-        let specs = RepeatingUIActionTimer.TimerSpecs(timeInterval: 0.5, repeats: true)
-        let sut = RepeatingUIActionTimer(specs: specs)
+    func test_schedule_schedulesTimerWithTimeInterval() {
+        let sut = RepeatingUIActionTimer(timeInterval: 1.12)
         
         sut.schedule(action: { _ in })
         
-        XCTAssertEqual(sut.timer?.timeInterval, specs.timeInterval)
+        XCTAssertEqual(sut.timer?.timeInterval, 1.12)
     }
 }
