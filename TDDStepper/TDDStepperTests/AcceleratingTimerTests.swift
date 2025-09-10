@@ -27,14 +27,20 @@ class AcceleratingTimer {
         self.timers = timers
     }
     
-    func schedule() {
+    func schedule(action: @escaping () -> Void) {
         let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]
         timer?.schedule(action: { [self] _ in
-            if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
+            if !isLastTimer(), CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
                 scheduleNextTimer()
+            } else {
+                action()
             }
         })
+    }
+    
+    private func isLastTimer() -> Bool {
+        timerIndex == timers.endIndex - 1
     }
     
     private func scheduleNextTimer() {
@@ -65,7 +71,7 @@ class AcceleratingTimerTests: XCTestCase {
         let timer = TimerSpy()
         let sut = try makeSUT(timers: [timer])
         
-        sut.schedule()
+        sut.schedule {}
         
         XCTAssertEqual(currentTimer(in: sut), timer)
     }
@@ -75,7 +81,7 @@ class AcceleratingTimerTests: XCTestCase {
         let secondTimer = TimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
-        sut.schedule()
+        sut.schedule {}
         XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
         fireTimer(in: sut)
@@ -88,7 +94,7 @@ class AcceleratingTimerTests: XCTestCase {
         let secondTimer = TimerSpy()
         let sut = try makeSUT(accelerationInterval: accelerationInterval, timers: [firstTimer, secondTimer])
         
-        sut.schedule()
+        sut.schedule {}
         XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
         fireTimer(in: sut)
@@ -108,7 +114,7 @@ class AcceleratingTimerTests: XCTestCase {
         let thirdTimer = TimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer, thirdTimer])
         
-        sut.schedule()
+        sut.schedule {}
         XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
         fireTimer(in: sut)
@@ -123,7 +129,7 @@ class AcceleratingTimerTests: XCTestCase {
         let secondTimer = TimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
-        sut.schedule()
+        sut.schedule {}
         XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
         fireTimer(in: sut)
@@ -131,6 +137,22 @@ class AcceleratingTimerTests: XCTestCase {
         XCTAssertEqual(firstTimer.isValid, false, "Expected first timer to be invalidated")
         XCTAssertEqual(currentTimer(in: sut), secondTimer, "Expected timer to be second timer")
     }
+    
+    func test_schedule_notifiesHandlerWhenTimerFires() throws {
+        var eventCount = 0
+        let sut = try makeSUT(timers: [TimerSpy()])
+        sut.schedule { eventCount += 1 }
+
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 1)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 2)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 3)
+    }
+    
     
     // MARK: - Helpers
     private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingTimer {
