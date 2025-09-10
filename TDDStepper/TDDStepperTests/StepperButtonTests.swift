@@ -102,11 +102,11 @@ class StepperButtonTests: XCTestCase {
         return (sut, timer)
     }
     
-    private class TimerSpy: UIActionTimer {
+    private class TimerSpy: NSObject, UIActionTimer {
         private(set) var scheduleCallCount = 0
         private var action: ((UIActionTimer) -> Void)?
         
-        func schedule(action: @escaping (any UIActionTimer) -> Void) {
+        func schedule(action: @escaping (UIActionTimer) -> Void) {
             scheduleCallCount += 1
             self.action = action
         }

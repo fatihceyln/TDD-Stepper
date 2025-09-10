@@ -69,7 +69,7 @@ class UIActionContinuationTests: XCTestCase {
         return (sut, timer)
     }
     
-    private final class TimerSpy: UIActionTimer {
+    private final class TimerSpy: NSObject, UIActionTimer {
         private(set) var scheduleCallCount = 0
         private var action: ((TimerSpy) -> Void)?
         

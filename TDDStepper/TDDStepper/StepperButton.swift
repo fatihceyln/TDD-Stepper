@@ -7,8 +7,8 @@
 
 import UIKit
 
-private final class NullUIActionTimer: UIActionTimer {
-    func schedule(action: @escaping (any UIActionTimer) -> Void) {}
+private final class NullUIActionTimer: NSObject, UIActionTimer {
+    func schedule(action: @escaping (UIActionTimer) -> Void) {}
     func invalidate() {}
 }
 

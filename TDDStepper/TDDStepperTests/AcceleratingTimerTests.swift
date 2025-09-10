@@ -6,23 +6,22 @@
 //
 
 import XCTest
+@testable import TDDStepper
 
 class AcceleratingTimer {
     struct InitializedWithEmptyTimers: Error {}
     
     typealias AccelerationInterval = TimeInterval
-    typealias TimerAction = () -> Void
-    typealias TimerProvider = (@escaping TimerAction) -> Timer
     
     private let accelerationInterval: AccelerationInterval
-    private let timers: [TimerProvider]
-    
-    private var timerIndex = 0
-    private(set) var timer: Timer? {
+    private let timers: [UIActionTimer]
+    private(set) var timer: (UIActionTimer)? {
         didSet { oldValue?.invalidate() }
     }
     
-    init(accelerationInterval: AccelerationInterval, timers: [TimerProvider]) throws {
+    private var timerIndex = 0
+    
+    init(accelerationInterval: AccelerationInterval, timers: [UIActionTimer]) throws {
         guard !timers.isEmpty else { throw InitializedWithEmptyTimers() }
         self.accelerationInterval = accelerationInterval
         self.timers = timers
@@ -30,7 +29,8 @@ class AcceleratingTimer {
     
     func schedule() {
         let startTime = CFAbsoluteTimeGetCurrent()
-        timer = timers[timerIndex]({ [self] in
+        timer = timers[timerIndex]
+        timer?.schedule(action: { [self] _ in
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
                 scheduleNextTimer()
             }
@@ -43,7 +43,8 @@ class AcceleratingTimer {
         guard timerIndex < lastIndex else { return }
         
         let startTime = CFAbsoluteTimeGetCurrent()
-        timer = timers[timerIndex]({ [self] in
+        timer = timers[timerIndex]
+        timer?.schedule(action: { [self] _ in
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
                 scheduleNextTimer()
             }
@@ -57,154 +58,113 @@ class AcceleratingTimerTests: XCTestCase {
     }
     
     func test_init_doesNotThrowErrorWhenInitializedWithATimer() {
-        XCTAssertNoThrow(try makeSUT(timers: [{ _ in TimerSpy() }]))
+        XCTAssertNoThrow(try makeSUT(timers: [TimerSpy()]))
     }
     
-    func test_schedule_requestsFirstTimer() throws {
+    func test_schedule_requestsScheduleFromTimer() throws {
         let timer = TimerSpy()
-        let sut = try makeSUT(timers: [{ _ in timer }])
+        let sut = try makeSUT(timers: [timer])
         
         sut.schedule()
         
-        XCTAssertEqual(sut.timer, timer)
+        XCTAssertEqual(currentTimer(in: sut), timer)
     }
     
     func test_schedule_requestsSecondTimerAfterFirstTimerFires() throws {
-        var firstTimer: TimerSpy!
-        var secondTimer: TimerSpy!
-        
-        let sut = try makeSUT(timers: [
-            { action in
-                firstTimer = TimerSpy(callback: action)
-                return firstTimer!
-            },
-            { action in
-                secondTimer = TimerSpy(callback: action)
-                return secondTimer!
-            }
-        ])
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
         sut.schedule()
-        XCTAssertEqual(sut.timer, firstTimer)
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
-        sut.fireTimerEvent()
-        XCTAssertEqual(sut.timer, secondTimer)
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), secondTimer)
     }
     
     func test_schedule_requestsSecondTimerAfterAccelerationInterval() throws {
         let accelerationInterval = 0.1
-        var firstTimer: TimerSpy!
-        var secondTimer: TimerSpy!
-        
-        let sut = try makeSUT(accelerationInterval: accelerationInterval, timers: [
-            { action in
-                firstTimer = TimerSpy(callback: action)
-                return firstTimer!
-            },
-            { action in
-                secondTimer = TimerSpy(callback: action)
-                return secondTimer!
-            }
-        ])
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(accelerationInterval: accelerationInterval, timers: [firstTimer, secondTimer])
         
         sut.schedule()
-        XCTAssertEqual(sut.timer, firstTimer)
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
-        sut.fireTimerEvent()
-        XCTAssertEqual(sut.timer, firstTimer)
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
         let exp = expectation(description: "Wait for acceleration interval")
         exp.isInverted = true
         wait(for: [exp], timeout: accelerationInterval)
         
-        sut.fireTimerEvent()
-        XCTAssertEqual(sut.timer, secondTimer)
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), secondTimer)
     }
     
     func test_schedule_requestsThirdTimerAfterSecondTimerFires() throws {
-        var firstTimer: TimerSpy?
-        var secondTimer: TimerSpy?
-        var thirdTimer: TimerSpy?
-        
-        let sut = try makeSUT(timers: [
-            { callback in
-                firstTimer = TimerSpy(callback: callback)
-                return firstTimer!
-            },
-            { callback in
-                secondTimer = TimerSpy(callback: callback)
-                return secondTimer!
-            },
-            { callback in
-                thirdTimer = TimerSpy(callback: callback)
-                return thirdTimer!
-            },
-        ])
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let thirdTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer, thirdTimer])
         
         sut.schedule()
-        XCTAssertEqual(sut.timer, firstTimer)
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
-        sut.fireTimerEvent()
-        XCTAssertEqual(sut.timer, secondTimer)
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), secondTimer)
         
-        sut.fireTimerEvent()
-        XCTAssertEqual(sut.timer, thirdTimer)
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), thirdTimer)
     }
     
     func test_schedule_invalidatesFirstTimerWhenSecondTimerIsRequested() throws {
-        var firstTimer: TimerSpy!
-        var secondTimer: TimerSpy!
-        
-        let sut = try makeSUT(timers: [
-            { action in
-                firstTimer = TimerSpy(callback: action)
-                return firstTimer!
-            },
-            { action in
-                secondTimer = TimerSpy(callback: action)
-                return secondTimer!
-            }
-        ])
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
         sut.schedule()
-        XCTAssertEqual(sut.timer, firstTimer)
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
         
-        sut.fireTimerEvent()
+        fireTimer(in: sut)
         
         XCTAssertEqual(firstTimer.isValid, false, "Expected first timer to be invalidated")
-        XCTAssertEqual(sut.timer, secondTimer, "Expected timer to be second timer")
+        XCTAssertEqual(currentTimer(in: sut), secondTimer, "Expected timer to be second timer")
     }
     
     // MARK: - Helpers
-    private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [AcceleratingTimer.TimerProvider]) throws -> AcceleratingTimer {
+    private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingTimer {
         let sut = try AcceleratingTimer(accelerationInterval: accelerationInterval, timers: timers)
         return sut
     }
     
-    private class TimerSpy: Timer {
-        private var callback: (() -> Void)?
+    private class TimerSpy: NSObject, UIActionTimer {
+        private(set) var scheduleCallCount = 0
+        private var action: ((UIActionTimer) -> Void)?
         
-        override var isValid: Bool {
-            callback != nil
+        var isValid: Bool {
+            action != nil
         }
         
-        convenience init(callback: @escaping () -> Void) {
-            self.init()
-            self.callback = callback
+        func schedule(action: @escaping (UIActionTimer) -> Void) {
+            scheduleCallCount += 1
+            self.action = action
         }
         
-        override func fire() {
-            callback?()
+        func invalidate() {
+            action = nil
         }
         
-        override func invalidate() {
-            callback = nil
+        func fire() {
+            action?(self)
         }
     }
-}
-
-extension AcceleratingTimer {
-    func fireTimerEvent() {
-        timer?.fire()
+    
+    private func fireTimer(in sut: AcceleratingTimer) {
+        (sut.timer as! TimerSpy).fire()
+    }
+    
+    private func currentTimer(in sut: AcceleratingTimer) -> TimerSpy? {
+        sut.timer as? TimerSpy
     }
 }
