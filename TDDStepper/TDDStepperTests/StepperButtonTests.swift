@@ -85,7 +85,7 @@ class StepperButtonTests: XCTestCase {
             timer = TimerSpy(block: action)
             return timer!
         }))
-        sut.isContinious = isContinuous
+        sut.isContinuous = isContinuous
         addTeardownBlock { [weak sut] in
             XCTAssertNil(sut, "Expected instance to be nil. Potential memory leak.", file: file, line: line)
         }

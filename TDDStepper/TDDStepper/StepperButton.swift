@@ -24,7 +24,7 @@ class StepperButton: UIButton {
         })
     })
     
-    var isContinious = true
+    var isContinuous = true
     
     convenience init(continuation: UIActionContinuation) {
         self.init()
@@ -38,7 +38,7 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isContinious else { return }
+        guard isContinuous else { return }
         continuation.schedule(continuation: { [weak self] in
             guard let self else { return }
             sendActions(for: .touchUpInside)
