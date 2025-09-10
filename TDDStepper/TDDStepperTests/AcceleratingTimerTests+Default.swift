@@ -11,10 +11,10 @@ import XCTest
 extension AcceleratingTimerTests {
     func test_default() {
         let sut = AcceleratingTimer.default()
-        XCTAssertEqual(sut.accelerationInterval, 0.5)
+        XCTAssertEqual(sut.accelerationInterval, 2)
         XCTAssertEqual(sut.timers.count, 3)
-        XCTAssertEqual(timer(at: 0, in: sut).timeInterval, 0.3)
-        XCTAssertEqual(timer(at: 1, in: sut).timeInterval, 0.2)
+        XCTAssertEqual(timer(at: 0, in: sut).timeInterval, 0.5)
+        XCTAssertEqual(timer(at: 1, in: sut).timeInterval, 0.25)
         XCTAssertEqual(timer(at: 2, in: sut).timeInterval, 0.1)
     }
     

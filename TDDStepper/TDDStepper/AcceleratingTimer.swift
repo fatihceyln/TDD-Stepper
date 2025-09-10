@@ -63,10 +63,10 @@ class AcceleratingTimer: UIActionTimer {
 extension AcceleratingTimer {
     static func `default`() -> AcceleratingTimer {
         try! AcceleratingTimer(
-            accelerationInterval: 0.5,
+            accelerationInterval: 2,
             timers: [
-                RepeatingUIActionTimer(timeInterval: 0.3),
-                RepeatingUIActionTimer(timeInterval: 0.2),
+                RepeatingUIActionTimer(timeInterval: 0.5),
+                RepeatingUIActionTimer(timeInterval: 0.25),
                 RepeatingUIActionTimer(timeInterval: 0.1)
             ]
         )
