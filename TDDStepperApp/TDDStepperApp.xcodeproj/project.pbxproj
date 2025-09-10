@@ -6,8 +6,28 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3D00A0412E71D3CF009F3256 /* TDDStepper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D00A0402E71D3CF009F3256 /* TDDStepper.framework */; };
+		3D00A0422E71D3CF009F3256 /* TDDStepper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D00A0402E71D3CF009F3256 /* TDDStepper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3D00A0432E71D3CF009F3256 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3D00A0422E71D3CF009F3256 /* TDDStepper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3D00A03C2E71D397009F3256 /* TDDStepper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TDDStepper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D00A0402E71D3CF009F3256 /* TDDStepper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TDDStepper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D64198B2E71D34D00774733 /* TDDStepperApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDStepperApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -37,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D00A0412E71D3CF009F3256 /* TDDStepper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +67,7 @@
 		3D00A03B2E71D397009F3256 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D00A0402E71D3CF009F3256 /* TDDStepper.framework */,
 				3D00A03C2E71D397009F3256 /* TDDStepper.framework */,
 			);
 			name = Frameworks;
@@ -78,6 +100,7 @@
 				3D6419872E71D34D00774733 /* Sources */,
 				3D6419882E71D34D00774733 /* Frameworks */,
 				3D6419892E71D34D00774733 /* Resources */,
+				3D00A0432E71D3CF009F3256 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
