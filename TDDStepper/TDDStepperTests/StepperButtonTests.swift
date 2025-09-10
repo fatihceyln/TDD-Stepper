@@ -90,6 +90,16 @@ class StepperButtonTests: XCTestCase {
         XCTAssertTrue(sut.isHighlighted)
     }
     
+    func test_isEnabled_effectsIsHighlighted() {
+        let (sut, _) = makeSUT()
+        
+        sut.simulateTouchStart()
+        XCTAssertTrue(sut.isHighlighted, "Expected highlight after touch begins")
+        
+        sut.isEnabled = false
+        XCTAssertFalse(sut.isHighlighted, "Expected not to remain highlighted once the button is disabled during touch")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> (sut: StepperButton, timer: TimerSpy) {

@@ -15,6 +15,7 @@ class StepperButton: UIButton {
     override var isEnabled: Bool {
         didSet {
             backgroundColor = isEnabled ? .systemGray5 : .systemGray6
+            if !isEnabled { isHighlighted = false }
         }
     }
     
