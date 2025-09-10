@@ -12,8 +12,8 @@ class AcceleratingTimer: UIActionTimer {
     
     typealias AccelerationInterval = TimeInterval
     
-    private let accelerationInterval: AccelerationInterval
-    private let timers: [UIActionTimer]
+    let accelerationInterval: AccelerationInterval
+    let timers: [UIActionTimer]
     private(set) var timer: (UIActionTimer)? {
         didSet { oldValue?.invalidate() }
     }
@@ -57,5 +57,18 @@ class AcceleratingTimer: UIActionTimer {
                 scheduleNextTimer(action: action)
             }
         })
+    }
+}
+
+extension AcceleratingTimer {
+    static func `default`() -> AcceleratingTimer {
+        try! AcceleratingTimer(
+            accelerationInterval: 0.5,
+            timers: [
+                RepeatingUIActionTimer(timeInterval: 0.3),
+                RepeatingUIActionTimer(timeInterval: 0.2),
+                RepeatingUIActionTimer(timeInterval: 0.1)
+            ]
+        )
     }
 }
