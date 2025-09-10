@@ -14,6 +14,10 @@ class UIActionContinuation {
     init(timerProvider: @escaping TimerProvider) {
         self.timerProvider = timerProvider
     }
+    
+    func schedule() {
+        timerProvider({})
+    }
 }
 
 
@@ -26,6 +30,18 @@ class UIActionContinuationTests: XCTestCase {
         })
         
         XCTAssertNil(timer, "Expected not to be requested a timer upon creation")
+    }
+    
+    func test_schedule_requestsTimer() {
+        var timer: TimerSpy?
+        let sut = UIActionContinuation(timerProvider: { action in
+            timer = TimerSpy(callback: action)
+            return timer!
+        })
+        
+        sut.schedule()
+        
+        XCTAssertNotNil(timer, "Expected timer to be requested after schedule command")
     }
     
     // MARK: - Helpers
