@@ -87,7 +87,7 @@ class AcceleratingTimerTests: XCTestCase {
         sut.schedule()
         XCTAssertEqual(sut.timer, firstTimer)
         
-        firstTimer.fire()
+        sut.fireTimerEvent()
         XCTAssertEqual(sut.timer, secondTimer)
     }
     
@@ -110,14 +110,14 @@ class AcceleratingTimerTests: XCTestCase {
         sut.schedule()
         XCTAssertEqual(sut.timer, firstTimer)
         
-        sut.timer?.fire()
+        sut.fireTimerEvent()
         XCTAssertEqual(sut.timer, firstTimer)
         
         let exp = expectation(description: "Wait for acceleration interval")
         exp.isInverted = true
         wait(for: [exp], timeout: accelerationInterval)
         
-        sut.timer?.fire()
+        sut.fireTimerEvent()
         XCTAssertEqual(sut.timer, secondTimer)
     }
     
@@ -144,14 +144,14 @@ class AcceleratingTimerTests: XCTestCase {
         sut.schedule()
         XCTAssertEqual(sut.timer, firstTimer)
         
-        firstTimer?.fire()
+        sut.fireTimerEvent()
         XCTAssertEqual(sut.timer, secondTimer)
         
-        secondTimer?.fire()
+        sut.fireTimerEvent()
         XCTAssertEqual(sut.timer, thirdTimer)
     }
     
-    func test_schedule_invalidatesFirstTimer_whenFirstTimerFires() throws {
+    func test_schedule_invalidatesFirstTimerWhenSecondTimerIsRequested() throws {
         var firstTimer: TimerSpy!
         var secondTimer: TimerSpy!
         
@@ -169,10 +169,10 @@ class AcceleratingTimerTests: XCTestCase {
         sut.schedule()
         XCTAssertEqual(sut.timer, firstTimer)
         
-        firstTimer.fire()
-        XCTAssertEqual(sut.timer, secondTimer)
+        sut.fireTimerEvent()
         
         XCTAssertEqual(firstTimer.isValid, false, "Expected first timer to be invalidated")
+        XCTAssertEqual(sut.timer, secondTimer, "Expected timer to be second timer")
     }
     
     // MARK: - Helpers
