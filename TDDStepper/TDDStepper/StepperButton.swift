@@ -37,7 +37,8 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer = timerProvider?() { [self] in
+        timer = timerProvider?() { [weak self] in
+            guard let self else { return }
             isContinuing = true
             sendActions(for: .touchUpInside)
         }

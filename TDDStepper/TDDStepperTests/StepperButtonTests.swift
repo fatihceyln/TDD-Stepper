@@ -73,11 +73,14 @@ class StepperButtonTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT() -> StepperButton {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> StepperButton {
         let sut = StepperButton(timerProvider: { [self] callback in
             timer = TimerSpy(block: callback)
             return timer!
         })
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut, "Expected instance to be nil. Potential memory leak.", file: file, line: line)
+        }
         return sut
     }
     
