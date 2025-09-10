@@ -8,43 +8,32 @@
 import UIKit
 
 public class Stepper: UIControl {
-    public var value: UInt = 0 {
-        didSet {
-            if value > maximumValue {
-                value = maximumValue
-            }
-            
-            if value < minimumValue {
-                value = minimumValue
-            }
-            
+    private var stepperState = StepperState()
+    
+    public var value: UInt {
+        get { stepperState.value }
+        set {
+            stepperState.value = newValue
             textLabel.text = String(value)
             updateButtons()
             sendActions(for: .valueChanged)
         }
     }
     
-    public var minimumValue: UInt = 0 {
-        didSet {
-            if minimumValue > value {
-                value = minimumValue
-            }
-            
-            if minimumValue > maximumValue {
-                maximumValue = minimumValue
-            }
-        }
+    public var minimumValue: UInt {
+        get { stepperState.minimumValue }
+        set { stepperState.minimumValue = newValue }
     }
     
-    public var maximumValue: UInt = 10 {
-        didSet {
-            if maximumValue < minimumValue {
-                minimumValue = maximumValue
-            }
-        }
+    public var maximumValue: UInt {
+        get { stepperState.maximumValue }
+        set { stepperState.maximumValue = newValue }
     }
     
-    public var stepValue: UInt = 1
+    public var stepValue: UInt {
+        get { stepperState.stepValue }
+        set { stepperState.stepValue = newValue }
+    }
     
     private(set) lazy var decrementButton = makeButton(title: "-", actionHandler: handleDecrementButtonTap())
     private(set) lazy var incrementButton = makeButton(title: "+", actionHandler: handleIncrementButtonTap())
