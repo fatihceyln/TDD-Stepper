@@ -64,6 +64,14 @@ class StepperTests: XCTestCase {
         XCTAssertEqual(sut.value, 3, "Expected value to be limited by minimum value")
     }
     
+    func test_setStepValueBelowOne_updatesStepValueToOne() {
+        let sut = makeSUT()
+        
+        sut.stepValue = .zero
+        
+        XCTAssertEqual(sut.stepValue, 1, "Expected step value to equal one when set below one")
+    }
+    
     func test_sendsValueChangedEvent_whenValueChanges() {
         var eventCount = 0
         let sut = makeSUT()

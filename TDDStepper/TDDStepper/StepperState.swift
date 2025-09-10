@@ -40,5 +40,11 @@ struct StepperState {
         }
     }
     
-    var stepValue: UInt = 1
+    var stepValue: UInt = 1 {
+        didSet {
+            if stepValue < 1 {
+                stepValue = 1
+            }
+        }
+    }
 }
