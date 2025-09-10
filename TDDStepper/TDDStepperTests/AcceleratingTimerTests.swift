@@ -18,7 +18,9 @@ class AcceleratingTimer {
     private let timers: [TimerProvider]
     
     private var timerIndex = 0
-    private(set) var timer: Timer?
+    private(set) var timer: Timer? {
+        didSet { oldValue?.invalidate() }
+    }
     
     init(accelerationInterval: AccelerationInterval, timers: [TimerProvider]) throws {
         guard !timers.isEmpty else { throw InitializedWithEmptyTimers() }
@@ -112,6 +114,30 @@ class AcceleratingTimerTests: XCTestCase {
         XCTAssertEqual(sut.timer, thirdTimer)
     }
     
+    func test_schedule_invalidatesFirstTimer_whenFirstTimerFires() throws {
+        var firstTimer: TimerSpy!
+        var secondTimer: TimerSpy!
+        
+        let sut = try makeSUT(timers: [
+            { action in
+                firstTimer = TimerSpy(callback: action)
+                return firstTimer!
+            },
+            { action in
+                secondTimer = TimerSpy(callback: action)
+                return secondTimer!
+            }
+        ])
+        
+        sut.schedule()
+        XCTAssertEqual(sut.timer, firstTimer)
+        
+        firstTimer.fire()
+        XCTAssertEqual(sut.timer, secondTimer)
+        
+        XCTAssertEqual(firstTimer.isValid, false, "Expected first timer to be invalidated")
+    }
+    
     // MARK: - Helpers
     private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [AcceleratingTimer.TimerProvider]) throws -> AcceleratingTimer {
         let sut = try AcceleratingTimer(accelerationInterval: accelerationInterval, timers: timers)
@@ -121,6 +147,10 @@ class AcceleratingTimerTests: XCTestCase {
     private class TimerSpy: Timer {
         private var callback: (() -> Void)?
         
+        override var isValid: Bool {
+            callback != nil
+        }
+        
         convenience init(callback: @escaping () -> Void) {
             self.init()
             self.callback = callback
@@ -128,6 +158,10 @@ class AcceleratingTimerTests: XCTestCase {
         
         override func fire() {
             callback?()
+        }
+        
+        override func invalidate() {
+            callback = nil
         }
     }
 }
