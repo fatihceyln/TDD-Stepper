@@ -18,8 +18,11 @@ class StepperButton: UIButton {
         }
     }
     
-    private var continuation: UIActionContinuation?
-    private var isContinuing = false
+    private lazy var continuation = UIActionContinuation(timerProvider: { action in
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
+            action()
+        })
+    })
     
     convenience init(continuation: UIActionContinuation) {
         self.init()
@@ -33,20 +36,18 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        continuation?.schedule(continuation: { [weak self] in
+        continuation.schedule(continuation: { [weak self] in
             guard let self else { return }
-            isContinuing = true
             sendActions(for: .touchUpInside)
         })
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         defer {
-            continuation?.invalidate()
-            isContinuing = false
+            continuation.invalidate()
         }
         
-        guard !isContinuing else { return }
+        guard continuation.isContinuing == false else { return }
         sendActions(for: .touchUpInside)
     }
     
