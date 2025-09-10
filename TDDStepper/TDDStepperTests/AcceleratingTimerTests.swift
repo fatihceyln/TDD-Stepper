@@ -39,6 +39,10 @@ class AcceleratingTimer {
         })
     }
     
+    func invalidate() {
+        timer?.invalidate()
+    }
+    
     private func scheduleNextTimer(action: @escaping () -> Void) {
         timerIndex += 1
         let lastIndex = timers.count
@@ -169,6 +173,25 @@ class AcceleratingTimerTests: XCTestCase {
         
         fireTimer(in: sut)
         XCTAssertEqual(eventCount, 4)
+    }
+    
+    func test_schedule_doesNotNotifyHandlerAfterInvalidation() throws {
+        var eventCount = 0
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer])
+        sut.schedule { eventCount += 1 }
+
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 1)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 2)
+        
+        sut.invalidate()
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(eventCount, 2)
     }
     
     // MARK: - Helpers
