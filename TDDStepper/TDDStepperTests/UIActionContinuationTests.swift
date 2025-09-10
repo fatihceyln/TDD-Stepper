@@ -6,26 +6,7 @@
 //
 
 import XCTest
-
-class UIActionContinuation {
-    typealias TimerProvider = (@escaping () -> Void) -> Timer
-    private let timerProvider: TimerProvider
-    private var timer: Timer?
-    
-    init(timerProvider: @escaping TimerProvider) {
-        self.timerProvider = timerProvider
-    }
-    
-    func schedule(continuation handler: @escaping () -> Void) {
-        timer = timerProvider({ handler() })
-    }
-    
-    func invalidate() {
-        timer?.invalidate() 
-        timer = nil
-    }
-}
-
+@testable import TDDStepper
 
 class UIActionContinuationTests: XCTestCase {
     func test_init_doesNotRequestsTimerUponCreation() {
