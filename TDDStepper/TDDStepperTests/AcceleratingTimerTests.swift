@@ -139,7 +139,6 @@ class AcceleratingTimerTests: XCTestCase {
     }
     
     private class TimerSpy: NSObject, UIActionTimer {
-        private(set) var scheduleCallCount = 0
         private var action: ((UIActionTimer) -> Void)?
         
         var isValid: Bool {
@@ -147,7 +146,6 @@ class AcceleratingTimerTests: XCTestCase {
         }
         
         func schedule(action: @escaping (UIActionTimer) -> Void) {
-            scheduleCallCount += 1
             self.action = action
         }
         

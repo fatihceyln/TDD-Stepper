@@ -22,14 +22,14 @@ class StepperButtonTests: XCTestCase {
         let (sut, timer) = makeSUT()
         
         sut.simulateTouchStart()
-        XCTAssertEqual(timer.scheduleCallCount, 1)
+        XCTAssertTrue(timer.isScheduled)
     }
     
     func test_touchStart_doesNotScheduleTimerWhenButtonIsNonContinuous() {
         let (sut, timer) = makeSUT(isContinuous: false)
         
         sut.simulateTouchStart()
-        XCTAssertEqual(timer.scheduleCallCount, .zero)
+        XCTAssertFalse(timer.isScheduled)
     }
     
     func test_sendsEvent_whenTimerFires() {
@@ -103,11 +103,12 @@ class StepperButtonTests: XCTestCase {
     }
     
     private class TimerSpy: NSObject, UIActionTimer {
-        private(set) var scheduleCallCount = 0
         private var action: ((UIActionTimer) -> Void)?
+        var isScheduled: Bool {
+            action != nil
+        }
         
         func schedule(action: @escaping (UIActionTimer) -> Void) {
-            scheduleCallCount += 1
             self.action = action
         }
         
