@@ -10,13 +10,19 @@ import XCTest
 class UIActionContinuation {
     typealias TimerProvider = (@escaping () -> Void) -> Timer
     private let timerProvider: TimerProvider
+    private var timer: Timer?
     
     init(timerProvider: @escaping TimerProvider) {
         self.timerProvider = timerProvider
     }
     
     func schedule(continuation handler: @escaping () -> Void) {
-        timerProvider({ handler() })
+        timer = timerProvider({ handler() })
+    }
+    
+    func invalidate() {
+        timer?.invalidate() 
+        timer = nil
     }
 }
 
@@ -58,6 +64,23 @@ class UIActionContinuationTests: XCTestCase {
         
         timer?.fire()
         XCTAssertEqual(eventCount, 2, "Expected to receive another event when timer fires again")
+    }
+    
+    func test_invalidateAfterSchedule_doesNotNotifyHandlerWhenTimerFires() {
+        var eventCount = 0
+        var timer: TimerSpy?
+        let sut = UIActionContinuation(timerProvider: { action in
+            timer = TimerSpy(callback: action)
+            return timer!
+        })
+        
+        sut.schedule { eventCount += 1 }
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1, "Expected to receive an event when timer fires")
+        
+        sut.invalidate()
+        timer?.fire()
+        XCTAssertEqual(eventCount, 1, "Expected not to receive another event when continuation is invalidated and timer fires")
     }
     
     // MARK: - Helpers
