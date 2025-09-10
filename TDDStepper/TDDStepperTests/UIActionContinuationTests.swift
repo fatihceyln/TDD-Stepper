@@ -24,7 +24,7 @@ class UIActionContinuation {
 class UIActionContinuationTests: XCTestCase {
     func test_init_doesNotRequestsTimerUponCreation() {
         var timer: TimerSpy?
-        let sut = UIActionContinuation(timerProvider: { action in
+        let _ = UIActionContinuation(timerProvider: { action in
             timer = TimerSpy(callback: action)
             return timer!
         })
