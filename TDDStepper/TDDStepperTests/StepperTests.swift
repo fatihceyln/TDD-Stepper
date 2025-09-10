@@ -158,9 +158,7 @@ class StepperTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> Stepper {
         let sut = Stepper()
-        addTeardownBlock { [weak sut] in
-            XCTAssertNil(sut, "Expected sut to be nil. Potential memory leak.", file: file, line: line)
-        }
+        trackForMemoryLeaks(sut)
         return sut
     }
 }

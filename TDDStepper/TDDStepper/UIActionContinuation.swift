@@ -16,7 +16,8 @@ class UIActionContinuation {
     }
     
     func schedule(continuation handler: @escaping () -> Void) {
-        timer.schedule(action: { [self] _ in
+        timer.schedule(action: { [weak self] _ in
+            guard let self else { return }
             isContinuing = true
             handler()
         })

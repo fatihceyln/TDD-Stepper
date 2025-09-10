@@ -29,7 +29,8 @@ class AcceleratingUIActionTimer: UIActionTimer {
     func schedule(action: @escaping (UIActionTimer) -> Void) {
         let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]
-        timer?.schedule(action: { [self] _ in
+        timer?.schedule(action: { [weak self] _ in
+            guard let self else { return }
             action(self)
             
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
@@ -50,7 +51,8 @@ class AcceleratingUIActionTimer: UIActionTimer {
         
         let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]
-        timer?.schedule(action: { [self] _ in
+        timer?.schedule(action: { [weak self] _ in
+            guard let self else { return }
             action(self)
             
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {

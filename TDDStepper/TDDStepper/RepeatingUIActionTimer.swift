@@ -16,7 +16,8 @@ final class RepeatingUIActionTimer: UIActionTimer {
     }
     
     func schedule(action: @escaping (any UIActionTimer) -> Void) {
-        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { [self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { [weak self] _ in
+            guard let self else { return }
             action(self)
         })
     }

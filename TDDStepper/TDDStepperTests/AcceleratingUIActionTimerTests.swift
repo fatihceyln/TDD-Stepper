@@ -163,8 +163,10 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT(accelerationInterval: AcceleratingUIActionTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingUIActionTimer {
+    private func makeSUT(accelerationInterval: AcceleratingUIActionTimer.AccelerationInterval = .zero, timers: [UIActionTimer], file: StaticString = #filePath,
+                         line: UInt = #line) throws -> AcceleratingUIActionTimer {
         let sut = try AcceleratingUIActionTimer(accelerationInterval: accelerationInterval, timers: timers)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     

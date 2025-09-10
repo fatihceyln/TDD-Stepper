@@ -10,17 +10,17 @@ import XCTest
 
 class RepeatingUIActionTimerTests: XCTestCase {
     func test_init_doesNotSchduleTimer() {
-        let sut = RepeatingUIActionTimer()
+        let sut = makeSUT()
         XCTAssertNil(sut.timer)
     }
     
     func test_initWithDefaultTimeInterval() {
-        let sut = RepeatingUIActionTimer()
+        let sut = makeSUT()
         XCTAssertEqual(sut.timeInterval, 0.5)
     }
     
     func test_schedule_schedulesTimerWithTimeInterval() throws {
-        let sut = RepeatingUIActionTimer(timeInterval: 1.12)
+        let sut = makeSUT(timeInterval: 1.12)
         
         sut.schedule(action: { _ in })
         
@@ -30,7 +30,7 @@ class RepeatingUIActionTimerTests: XCTestCase {
     }
     
     func test_invalidateAfterSchedule_invalidatesTimer() throws {
-        let sut = RepeatingUIActionTimer()
+        let sut = makeSUT()
         
         sut.schedule(action: { _ in })
         let timer = try XCTUnwrap(sut.timer)
@@ -40,11 +40,17 @@ class RepeatingUIActionTimerTests: XCTestCase {
     }
     
     func test_invalidate_removesReferenceToTimer() {
-        let sut = RepeatingUIActionTimer()
+        let sut = makeSUT()
         
         sut.schedule(action: { _ in })
         sut.invalidate()
         
         XCTAssertNil(sut.timer)
+    }
+    
+    private func makeSUT(timeInterval: TimeInterval? = nil) -> RepeatingUIActionTimer {
+        let sut = timeInterval.map { RepeatingUIActionTimer(timeInterval: $0) } ?? RepeatingUIActionTimer()
+        trackForMemoryLeaks(sut)
+        return sut
     }
 }

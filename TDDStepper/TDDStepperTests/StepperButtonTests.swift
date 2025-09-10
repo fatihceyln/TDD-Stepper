@@ -106,9 +106,8 @@ class StepperButtonTests: XCTestCase {
         let timer = TimerSpy()
         let sut = StepperButton(continuation: UIActionContinuation(timer: timer))
         sut.isContinuous = isContinuous
-        addTeardownBlock { [weak sut] in
-            XCTAssertNil(sut, "Expected instance to be nil. Potential memory leak.", file: file, line: line)
-        }
+        trackForMemoryLeaks(timer)
+        trackForMemoryLeaks(sut)
         return (sut, timer)
     }
     

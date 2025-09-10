@@ -66,6 +66,8 @@ class UIActionContinuationTests: XCTestCase {
     private func makeSUT() -> (sut: UIActionContinuation, timer: TimerSpy) {
         let timer = TimerSpy()
         let sut = UIActionContinuation(timer: timer)
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(timer)
         return (sut, timer)
     }
     
