@@ -50,7 +50,7 @@ public class Stepper: UIControl {
     private(set) lazy var incrementButton = makeButton(title: "+", actionHandler: handleIncrementButtonTap())
     private(set) lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .callout)
+        label.font = .monospacedSystemFont(ofSize: 15, weight: .medium)
         return label
     }()
     
