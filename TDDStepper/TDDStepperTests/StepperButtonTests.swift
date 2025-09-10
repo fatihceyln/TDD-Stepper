@@ -78,6 +78,20 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 2, "Expected to receive an event when tap occurs")
     }
     
+    func test_isHighlighted_stateChanges() {
+        let sut = makeSUT()
+        XCTAssertFalse(sut.isHighlighted, "Precondition")
+        
+        sut.simulateTouchStart()
+        XCTAssertTrue(sut.isHighlighted)
+        
+        sut.simulateTouchEnd()
+        XCTAssertFalse(sut.isHighlighted)
+        
+        sut.simulateTouchStart()
+        XCTAssertTrue(sut.isHighlighted)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> StepperButton {

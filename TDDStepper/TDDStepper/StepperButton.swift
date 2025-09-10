@@ -38,6 +38,8 @@ class StepperButton: UIButton {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isHighlighted = true
+        
         guard isContinuous else { return }
         continuation.schedule(continuation: { [weak self] in
             guard let self else { return }
@@ -48,6 +50,7 @@ class StepperButton: UIButton {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         defer {
             continuation.invalidate()
+            isHighlighted = false
         }
         
         guard continuation.isContinuing == false else { return }
