@@ -25,7 +25,11 @@ final class FoundationUIActionTimer: UIActionTimer {
         self.specs = specs
     }
     
-    func schedule(action: @escaping (any UIActionTimer) -> Void) {}
+    func schedule(action: @escaping (any UIActionTimer) -> Void) {
+        timer = Timer.scheduledTimer(withTimeInterval: specs.timeInterval, repeats: specs.repeats, block: { [self] _ in
+            action(self)
+        })
+    }
     
     func invalidate() {}
 }
@@ -40,5 +44,14 @@ class FoundationUIActionTimerTests: XCTestCase {
         let sut = FoundationUIActionTimer()
         XCTAssertEqual(sut.specs.timeInterval, 1)
         XCTAssertTrue(sut.specs.repeats)
+    }
+    
+    func test_schedule_schedulesTimerWithSpecs() {
+        let specs = FoundationUIActionTimer.TimerSpecs(timeInterval: 0.5, repeats: true)
+        let sut = FoundationUIActionTimer(specs: specs)
+        
+        sut.schedule(action: { _ in })
+        
+        XCTAssertEqual(sut.timer?.timeInterval, specs.timeInterval)
     }
 }
