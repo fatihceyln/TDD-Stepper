@@ -25,7 +25,7 @@ class StepperButton: UIButton {
         }
     }
     
-    private lazy var continuation = UIActionContinuation(timer: AcceleratingTimer.default())
+    private lazy var continuation = UIActionContinuation(timer: AcceleratingUIActionTimer.default())
     
     var isContinuous = true
     

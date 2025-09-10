@@ -1,5 +1,5 @@
 //
-//  AcceleratingTimerTests.swift
+//  AcceleratingUIActionTimerTests.swift
 //  TDDStepperTests
 //
 //  Created by Fatih Kilit on 10.09.2025.
@@ -8,8 +8,7 @@
 import XCTest
 @testable import TDDStepper
 
-
-class AcceleratingTimerTests: XCTestCase {
+class AcceleratingUIActionTimerTests: XCTestCase {
     func test_init_throwsErrorWhenInitializedWithNoTimers() throws {
         XCTAssertThrowsError(try makeSUT(timers: []))
     }
@@ -164,8 +163,8 @@ class AcceleratingTimerTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingTimer {
-        let sut = try AcceleratingTimer(accelerationInterval: accelerationInterval, timers: timers)
+    private func makeSUT(accelerationInterval: AcceleratingUIActionTimer.AccelerationInterval = .zero, timers: [UIActionTimer]) throws -> AcceleratingUIActionTimer {
+        let sut = try AcceleratingUIActionTimer(accelerationInterval: accelerationInterval, timers: timers)
         return sut
     }
     
@@ -189,11 +188,11 @@ class AcceleratingTimerTests: XCTestCase {
         }
     }
     
-    private func fireTimer(in sut: AcceleratingTimer) {
+    private func fireTimer(in sut: AcceleratingUIActionTimer) {
         (sut.timer as! TimerSpy).fire()
     }
     
-    private func currentTimer(in sut: AcceleratingTimer) -> TimerSpy? {
+    private func currentTimer(in sut: AcceleratingUIActionTimer) -> TimerSpy? {
         sut.timer as? TimerSpy
     }
 }

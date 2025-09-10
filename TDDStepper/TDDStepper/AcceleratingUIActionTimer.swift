@@ -1,5 +1,5 @@
 //
-//  AcceleratingTimer.swift
+//  AcceleratingUIActionTimer.swift
 //  TDDStepper
 //
 //  Created by Fatih Kilit on 10.09.2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AcceleratingTimer: UIActionTimer {
+class AcceleratingUIActionTimer: UIActionTimer {
     struct InitializedWithEmptyTimers: Error {}
     
     typealias AccelerationInterval = TimeInterval
@@ -60,9 +60,9 @@ class AcceleratingTimer: UIActionTimer {
     }
 }
 
-extension AcceleratingTimer {
-    static func `default`() -> AcceleratingTimer {
-        try! AcceleratingTimer(
+extension AcceleratingUIActionTimer {
+    static func `default`() -> AcceleratingUIActionTimer {
+        try! AcceleratingUIActionTimer(
             accelerationInterval: 2,
             timers: [
                 RepeatingUIActionTimer(timeInterval: 0.5),
