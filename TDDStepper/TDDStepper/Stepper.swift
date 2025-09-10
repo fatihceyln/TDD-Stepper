@@ -7,8 +7,8 @@
 
 import UIKit
 
-class Stepper: UIControl {
-    var value: UInt = 0 {
+public class Stepper: UIControl {
+    public var value: UInt = 0 {
         didSet {
             if value > maximumValue {
                 value = maximumValue
@@ -24,7 +24,7 @@ class Stepper: UIControl {
         }
     }
     
-    var minimumValue: UInt = 0 {
+    public var minimumValue: UInt = 0 {
         didSet {
             if minimumValue > value {
                 value = minimumValue
@@ -36,7 +36,7 @@ class Stepper: UIControl {
         }
     }
     
-    var maximumValue: UInt = 10 {
+    public var maximumValue: UInt = 10 {
         didSet {
             if maximumValue < minimumValue {
                 minimumValue = maximumValue
@@ -44,7 +44,7 @@ class Stepper: UIControl {
         }
     }
     
-    var stepValue: UInt = 1
+    public var stepValue: UInt = 1
     
     private(set) lazy var decrementButton = makeButton(title: "-", actionHandler: handleDecrementButtonTap())
     private(set) lazy var incrementButton = makeButton(title: "+", actionHandler: handleIncrementButtonTap())
@@ -62,13 +62,13 @@ class Stepper: UIControl {
         return borderLayer
     }()
     
-    override func didMoveToWindow() {
+    public override func didMoveToWindow() {
         super.didMoveToWindow()
         borderLayer.fillColor = UIColor.systemBackground.cgColor
         borderLayer.strokeColor = UIColor.systemGray5.cgColor
     }
 
-    convenience init() {
+    public convenience init() {
         self.init(frame: .zero)
         
         textLabel.text = String(value)
@@ -76,14 +76,14 @@ class Stepper: UIControl {
         setupConstraints()
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         borderLayer.frame = bounds
         borderLayer.path = UIBezierPath(roundedRect: bounds.inset(by: UIEdgeInsets(top: 0.5, left: 0.5, bottom: 0.5, right: 0.5)), cornerRadius: 18).cgPath
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let fittingSize = systemLayoutSizeFitting(CGSize(width: -1, height: 50), withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
         return fittingSize
     }
