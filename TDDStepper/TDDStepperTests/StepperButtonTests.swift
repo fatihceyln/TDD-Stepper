@@ -27,6 +27,13 @@ class StepperButtonTests: XCTestCase {
         XCTAssertNotNil(timer)
     }
     
+    func test_doesNotRequestsTimer_whenNotContinious() {
+        let sut = makeSUT(isContinuous: false)
+        
+        sut.simulateTouchStart()
+        XCTAssertNil(timer)
+    }
+    
     func test_sendsEvent_whenTimerFires() {
         var eventCount = 0
         let sut = makeSUT()
@@ -73,11 +80,12 @@ class StepperButtonTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> StepperButton {
+    private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> StepperButton {
         let sut = StepperButton(continuation: UIActionContinuation(timerProvider: { [self] action in
             timer = TimerSpy(block: action)
             return timer!
         }))
+        sut.isContinious = isContinuous
         addTeardownBlock { [weak sut] in
             XCTAssertNil(sut, "Expected instance to be nil. Potential memory leak.", file: file, line: line)
         }
