@@ -29,8 +29,11 @@ class AcceleratingTimer {
     }
     
     func schedule() {
+        let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]({ [self] in
-            scheduleNextTimer()
+            if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
+                scheduleNextTimer()
+            }
         })
     }
     
@@ -38,8 +41,12 @@ class AcceleratingTimer {
         timerIndex += 1
         let lastIndex = timers.count
         guard timerIndex < lastIndex else { return }
+        
+        let startTime = CFAbsoluteTimeGetCurrent()
         timer = timers[timerIndex]({ [self] in
-            scheduleNextTimer()
+            if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
+                scheduleNextTimer()
+            }
         })
     }
 }
@@ -81,6 +88,36 @@ class AcceleratingTimerTests: XCTestCase {
         XCTAssertEqual(sut.timer, firstTimer)
         
         firstTimer.fire()
+        XCTAssertEqual(sut.timer, secondTimer)
+    }
+    
+    func test_schedule_requestsSecondTimerAfterAccelerationInterval() throws {
+        let accelerationInterval = 0.1
+        var firstTimer: TimerSpy!
+        var secondTimer: TimerSpy!
+        
+        let sut = try makeSUT(accelerationInterval: accelerationInterval, timers: [
+            { action in
+                firstTimer = TimerSpy(callback: action)
+                return firstTimer!
+            },
+            { action in
+                secondTimer = TimerSpy(callback: action)
+                return secondTimer!
+            }
+        ])
+        
+        sut.schedule()
+        XCTAssertEqual(sut.timer, firstTimer)
+        
+        sut.timer?.fire()
+        XCTAssertEqual(sut.timer, firstTimer)
+        
+        let exp = expectation(description: "Wait for acceleration interval")
+        exp.isInverted = true
+        wait(for: [exp], timeout: accelerationInterval)
+        
+        sut.timer?.fire()
         XCTAssertEqual(sut.timer, secondTimer)
     }
     
@@ -163,5 +200,11 @@ class AcceleratingTimerTests: XCTestCase {
         override func invalidate() {
             callback = nil
         }
+    }
+}
+
+extension AcceleratingTimer {
+    func fireTimerEvent() {
+        timer?.fire()
     }
 }
