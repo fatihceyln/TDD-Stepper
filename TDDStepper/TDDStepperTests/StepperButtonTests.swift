@@ -11,7 +11,7 @@ import XCTest
 class StepperButtonTests: XCTestCase {
     private var timer: TimerSpy?
     
-    func test_sendsEvent_whenTouchEnds() {
+    func test_sendsEvent_uponTap() {
         var eventCount = 0
         let sut = StepperButton()
         sut.addAction(UIAction(handler: { _ in eventCount += 1 }), for: .touchUpInside)
@@ -40,7 +40,7 @@ class StepperButtonTests: XCTestCase {
         XCTAssertEqual(eventCount, 2)
     }
     
-    func test_doesNotSendEvent_whenTouchEndsAndTimerFires() {
+    func test_doesNotSendEvent_whenTimerFiresAfterTouchEnds() {
         var eventCount = 0
         let sut = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
@@ -51,10 +51,10 @@ class StepperButtonTests: XCTestCase {
         
         sut.simulateTouchEnd()
         timer?.fire()
-        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ends")
+        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ended")
     }
     
-    func test_sendsEventWhenSecondTapHappens_afterContinuation() {
+    func test_sendsEventWhenTapOccurs_afterTouchEnds() {
         var eventCount = 0
         let sut = makeSUT()
         sut.addAction(UIAction(handler: { _ in eventCount += 1}), for: .touchUpInside)
@@ -65,10 +65,10 @@ class StepperButtonTests: XCTestCase {
         
         sut.simulateTouchEnd()
         timer?.fire()
-        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ends")
+        XCTAssertEqual(eventCount, 1, "Expected not to receive any events after touch ended")
         
         sut.simulateTap()
-        XCTAssertEqual(eventCount, 2, "Expected to receive event when tap happens")
+        XCTAssertEqual(eventCount, 2, "Expected to receive an event when tap occurs")
     }
     
     // MARK: - Helpers
