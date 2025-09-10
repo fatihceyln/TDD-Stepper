@@ -24,6 +24,7 @@ final class RepeatingUIActionTimer: UIActionTimer {
     
     func invalidate() {
         timer?.invalidate()
+        timer = nil
     }
 }
 
@@ -56,5 +57,14 @@ class RepeatingUIActionTimerTests: XCTestCase {
         
         sut.invalidate()
         XCTAssertFalse(timer.isValid)
+    }
+    
+    func test_invalidate_removesReferenceToTimer() {
+        let sut = RepeatingUIActionTimer()
+        
+        sut.schedule(action: { _ in })
+        sut.invalidate()
+        
+        XCTAssertNil(sut.timer)
     }
 }
