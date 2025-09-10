@@ -13,8 +13,6 @@ class StepperSnapshotTests: XCTestCase {
         let sut = makeSUT()
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE_light")
-        
-        sut.backgroundColor = .black
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MINIMUM_VALUE_dark")
     }
     
@@ -24,8 +22,6 @@ class StepperSnapshotTests: XCTestCase {
         })
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MAXIMUM_VALUE_light")
-        
-        sut.backgroundColor = .black
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MAXIMUM_VALUE_dark")
     }
     
@@ -35,8 +31,6 @@ class StepperSnapshotTests: XCTestCase {
         })
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "VALUE_BETWEEN_LIMITS_light")
-        
-        sut.backgroundColor = .black
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "VALUE_BETWEEN_LIMITS_dark")
     }
     
@@ -45,15 +39,12 @@ class StepperSnapshotTests: XCTestCase {
         sut.incrementButton.isHighlighted = true
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "INCREMENT_BUTTON_HIGHLIGHTED_light")
-        
-        sut.backgroundColor = .black
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "INCREMENT_BUTTON_HIGHLIGHTED_dark")
     }
     
     // MARK: - Helpers
     private func makeSUT(configuration: (Stepper) -> Void = { _ in }) -> Stepper {
         let sut = Stepper()
-        sut.backgroundColor = .white
         configuration(sut)
         sut.sizeToFit()
         return sut

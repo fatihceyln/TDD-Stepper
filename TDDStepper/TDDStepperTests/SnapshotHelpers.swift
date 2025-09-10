@@ -64,6 +64,7 @@ extension UIView {
     func snapshot(for configuration: SnapshotConfiguration) -> UIImage {
         let container = UIViewController()
         container.view.addSubview(self)
+        container.view.backgroundColor = configuration.traitCollection.userInterfaceStyle == .light ? .white : .black
         return SnapshotWindow(configuration: configuration, root: container).snapshot()
     }
 }

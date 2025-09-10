@@ -54,33 +54,18 @@ public class Stepper: UIControl {
         return label
     }()
     
-    private lazy var borderLayer: CAShapeLayer = {
-        let borderLayer = CAShapeLayer()
-        borderLayer.borderWidth = 1
-        borderLayer.borderColor = nil
-        layer.insertSublayer(borderLayer, at: 0)
-        return borderLayer
-    }()
-    
-    public override func didMoveToWindow() {
-        super.didMoveToWindow()
-        borderLayer.fillColor = UIColor.systemBackground.cgColor
-        borderLayer.strokeColor = UIColor.systemGray5.cgColor
-    }
-
     public convenience init() {
         self.init(frame: .zero)
+        
+        clipsToBounds = true
+        backgroundColor = .systemBackground
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.systemGray5.cgColor
+        layer.cornerRadius = 25
         
         textLabel.text = String(value)
         updateButtons()
         setupConstraints()
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        borderLayer.frame = bounds
-        borderLayer.path = UIBezierPath(roundedRect: bounds.inset(by: UIEdgeInsets(top: 0.5, left: 0.5, bottom: 0.5, right: 0.5)), cornerRadius: 18).cgPath
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
