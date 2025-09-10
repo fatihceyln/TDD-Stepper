@@ -36,12 +36,15 @@ class RepeatingUIActionTimerTests: XCTestCase {
         XCTAssertEqual(sut.timeInterval, 0.5)
     }
     
-    func test_schedule_schedulesTimerWithTimeInterval() {
+    func test_schedule_schedulesTimerWithTimeInterval() throws {
         let sut = RepeatingUIActionTimer(timeInterval: 1.12)
         
         sut.schedule(action: { _ in })
         
-        XCTAssertEqual(sut.timer?.timeInterval, 1.12)
-        XCTAssertTrue(sut.timer?.isValid == true)
+        let timer = try XCTUnwrap(sut.timer)
+        XCTAssertEqual(timer.timeInterval, 1.12)
+        XCTAssertTrue(timer.isValid)
+    }
+    
     }
 }
