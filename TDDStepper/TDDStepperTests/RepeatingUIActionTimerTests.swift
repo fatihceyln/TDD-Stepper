@@ -42,5 +42,6 @@ class RepeatingUIActionTimerTests: XCTestCase {
         sut.schedule(action: { _ in })
         
         XCTAssertEqual(sut.timer?.timeInterval, 1.12)
+        XCTAssertTrue(sut.timer?.isValid == true)
     }
 }
