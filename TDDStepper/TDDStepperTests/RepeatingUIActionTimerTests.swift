@@ -1,5 +1,5 @@
 //
-//  FoundationUIActionTimerTests.swift
+//  RepeatingUIActionTimerTests.swift
 //  TDDStepperTests
 //
 //  Created by Fatih Kilit on 10.09.2025.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import TDDStepper
 
-final class FoundationUIActionTimer: UIActionTimer {
+final class RepeatingUIActionTimer: UIActionTimer {
     struct TimerSpecs {
         let timeInterval: TimeInterval
         let repeats: Bool
@@ -34,21 +34,21 @@ final class FoundationUIActionTimer: UIActionTimer {
     func invalidate() {}
 }
 
-class FoundationUIActionTimerTests: XCTestCase {
+class RepeatingUIActionTimerTests: XCTestCase {
     func test_init_doesNotSchduleTimer() {
-        let sut = FoundationUIActionTimer()
+        let sut = RepeatingUIActionTimer()
         XCTAssertNil(sut.timer)
     }
     
     func test_initWithDefaultSpecs() {
-        let sut = FoundationUIActionTimer()
+        let sut = RepeatingUIActionTimer()
         XCTAssertEqual(sut.specs.timeInterval, 1)
         XCTAssertTrue(sut.specs.repeats)
     }
     
     func test_schedule_schedulesTimerWithSpecs() {
-        let specs = FoundationUIActionTimer.TimerSpecs(timeInterval: 0.5, repeats: true)
-        let sut = FoundationUIActionTimer(specs: specs)
+        let specs = RepeatingUIActionTimer.TimerSpecs(timeInterval: 0.5, repeats: true)
+        let sut = RepeatingUIActionTimer(specs: specs)
         
         sut.schedule(action: { _ in })
         
