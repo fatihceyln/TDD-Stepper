@@ -18,6 +18,13 @@ class StepperButton: UIButton {
         }
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            let scale = isHighlighted ? 1.1 : 1.0
+            transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+    }
+    
     private lazy var continuation = UIActionContinuation(timerProvider: { action in
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
             action()
