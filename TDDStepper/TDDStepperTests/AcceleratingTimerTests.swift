@@ -24,7 +24,7 @@ class AcceleratingTimer {
 }
 
 class AcceleratingTimerTests: XCTestCase {
-    func test_init_throwsWhenTimersIsEmpty() throws {
+    func test_init_throwsErrorWhenInitializedWithNoTimers() throws {
         XCTAssertThrowsError(try AcceleratingTimer(accelerationInterval: .zero))
     }
     
