@@ -8,16 +8,20 @@
 import XCTest
 
 class AcceleratingTimer {
+    typealias AccelerationInterval = TimeInterval
     typealias TimerProvider = (TimeInterval) -> Timer
+    
+    private let accelerationInterval: AccelerationInterval
     private let timers: [TimerProvider]
     
-    init(timers: TimerProvider...) {
+    init(accelerationInterval: AccelerationInterval, timers: TimerProvider...) {
+        self.accelerationInterval = accelerationInterval
         self.timers = timers
     }
 }
 
 class AcceleratingTimerTests: XCTestCase {
     func test_init_doesNotCrash() {
-        let _ = AcceleratingTimer()
+        let _ = AcceleratingTimer(accelerationInterval: .zero)
     }
 }
