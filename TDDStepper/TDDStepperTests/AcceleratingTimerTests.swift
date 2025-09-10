@@ -16,7 +16,7 @@ class AcceleratingTimer {
     private let accelerationInterval: AccelerationInterval
     private let timers: [TimerProvider]
     
-    init(accelerationInterval: AccelerationInterval, timers: TimerProvider...) throws {
+    init(accelerationInterval: AccelerationInterval, timers: [TimerProvider]) throws {
         guard !timers.isEmpty else { throw InitializedWithEmptyTimers() }
         self.accelerationInterval = accelerationInterval
         self.timers = timers
@@ -25,12 +25,16 @@ class AcceleratingTimer {
 
 class AcceleratingTimerTests: XCTestCase {
     func test_init_throwsErrorWhenInitializedWithNoTimers() throws {
-        XCTAssertThrowsError(try AcceleratingTimer(accelerationInterval: .zero))
+        XCTAssertThrowsError(try makeSUT(timers: []))
     }
     
     func test_init_doesNotThrowErrorWhenInitializedWithATimer() {
-        XCTAssertNoThrow(try AcceleratingTimer(accelerationInterval: .zero, timers: { _ in
-            Timer()
-        }))
+        XCTAssertNoThrow(try makeSUT(timers: [{ _ in Timer() }]))
+    }
+    
+    // MARK: - Helpers
+    private func makeSUT(accelerationInterval: AcceleratingTimer.AccelerationInterval = .zero, timers: [AcceleratingTimer.TimerProvider]) throws -> AcceleratingTimer {
+        let sut = try AcceleratingTimer(accelerationInterval: accelerationInterval, timers: timers)
+        return sut
     }
 }
