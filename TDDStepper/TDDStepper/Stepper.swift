@@ -8,6 +8,10 @@
 import UIKit
 
 public class Stepper: UIControl {
+    public override var intrinsicContentSize: CGSize {
+        CGSize(width: UIView.noIntrinsicMetric, height: 50)
+    }
+    
     private var stepperState = StepperState()
     
     public var value: UInt {
@@ -43,9 +47,17 @@ public class Stepper: UIControl {
         return label
     }()
     
-    public convenience init() {
-        self.init(frame: .zero)
-        
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+    
+    private func commonInit() {
         clipsToBounds = true
         backgroundColor = .systemBackground
         layer.borderWidth = 1
@@ -58,7 +70,7 @@ public class Stepper: UIControl {
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = systemLayoutSizeFitting(CGSize(width: -1, height: 50), withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
+        let fittingSize = systemLayoutSizeFitting(intrinsicContentSize, withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
         return fittingSize
     }
     
