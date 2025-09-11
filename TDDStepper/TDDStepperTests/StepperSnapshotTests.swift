@@ -6,14 +6,15 @@
 //
 
 import XCTest
+import SnapshotTesting
 @testable import TDDStepper
 
 class StepperSnapshotTests: XCTestCase {
     func test_minimumValue() {
         let sut = makeSUT()
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MINIMUM_VALUE_light")
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MINIMUM_VALUE_dark")
+        assertSnapshot(of: sut, as: .image, named: "LIGHT")
+        assertSnapshot(of: sut, as: .image(traits: UITraitCollection(userInterfaceStyle: .dark)), named: "DARK")
     }
     
     func test_maximumValue() {
@@ -21,8 +22,8 @@ class StepperSnapshotTests: XCTestCase {
             $0.value = $0.maximumValue
         })
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "MAXIMUM_VALUE_light")
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "MAXIMUM_VALUE_dark")
+        assertSnapshot(of: sut, as: .image, named: "LIGHT")
+        assertSnapshot(of: sut, as: .image(traits: UITraitCollection(userInterfaceStyle: .dark)), named: "DARK")
     }
     
     func test_valueBetweenLimits() {
@@ -30,17 +31,17 @@ class StepperSnapshotTests: XCTestCase {
             $0.value = 2
         })
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "VALUE_BETWEEN_LIMITS_light")
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, layoutDirection: .rightToLeft)), named: "VALUE_BETWEEN_LIMITS_RTL")
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "VALUE_BETWEEN_LIMITS_dark")
+        assertSnapshot(of: sut, as: .image, named: "LIGHT")
+        assertSnapshot(of: sut, as: .image(traits: UITraitCollection(userInterfaceStyle: .dark)), named: "DARK")
+        assertSnapshot(of: sut, as: .image(traits: UITraitCollection(layoutDirection: .rightToLeft)), named: "RTL")
     }
     
-    func test_incrementButton_isHighlighted() {
+    func test_incrementButtonIsHighlighted() {
         let sut = makeSUT(configuration: { $0.value = 2 })
         sut.incrementButton.isHighlighted = true
         
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "INCREMENT_BUTTON_HIGHLIGHTED_light")
-        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "INCREMENT_BUTTON_HIGHLIGHTED_dark")
+        assertSnapshot(of: sut, as: .image, named: "LIGHT")
+        assertSnapshot(of: sut, as: .image(traits: UITraitCollection(userInterfaceStyle: .dark)), named: "DARK")
     }
     
     // MARK: - Helpers

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D0FEF302E69AE010032190F /* TDDStepper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FEF0C2E69AD940032190F /* TDDStepper.framework */; };
+		3DF360AB2E731A900002D9E6 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 3DF360AA2E731A900002D9E6 /* SnapshotTesting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D0FEF302E69AE010032190F /* TDDStepper.framework in Frameworks */,
+				3DF360AB2E731A900002D9E6 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +131,7 @@
 			);
 			name = TDDStepperTests;
 			packageProductDependencies = (
+				3DF360AA2E731A900002D9E6 /* SnapshotTesting */,
 			);
 			productName = TDDStepperTests;
 			productReference = 3D0FEF2C2E69AE010032190F /* TDDStepperTests.xctest */;
@@ -162,6 +165,9 @@
 			);
 			mainGroup = 3D0FEF022E69AD940032190F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3DF360A92E731A900002D9E6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3D0FEF0D2E69AD940032190F /* Products */;
 			projectDirPath = "";
@@ -475,6 +481,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3DF360A92E731A900002D9E6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3DF360AA2E731A900002D9E6 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DF360A92E731A900002D9E6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D0FEF032E69AD940032190F /* Project object */;
 }
