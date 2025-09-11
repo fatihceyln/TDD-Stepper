@@ -31,6 +31,7 @@ class StepperSnapshotTests: XCTestCase {
         })
         
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size)), named: "VALUE_BETWEEN_LIMITS_light")
+        assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, layoutDirection: .rightToLeft)), named: "VALUE_BETWEEN_LIMITS_RTL")
         assert(snapshot: sut.snapshot(for: .anyDevice(size: sut.frame.size, style: .dark)), named: "VALUE_BETWEEN_LIMITS_dark")
     }
     
