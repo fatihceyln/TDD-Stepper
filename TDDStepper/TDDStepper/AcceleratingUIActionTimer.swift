@@ -26,16 +26,8 @@ class AcceleratingUIActionTimer: UIActionTimer {
     }
     
     func schedule(action: @escaping (UIActionTimer) -> Void) {
-        let startTime = CFAbsoluteTimeGetCurrent()
-        timer = timers[timerIndex]
-        timer?.schedule(action: { [weak self] _ in
-            guard let self else { return }
-            action(self)
-            
-            if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
-                scheduleNextTimer(action: action)
-            }
-        })
+        timer = timers.first
+        timer?.schedule(action: handleTimerAction(action))
     }
     
     func invalidate() {
@@ -43,21 +35,25 @@ class AcceleratingUIActionTimer: UIActionTimer {
         timer?.invalidate()
     }
     
-    private func scheduleNextTimer(action: @escaping (UIActionTimer) -> Void) {
-        timerIndex += 1
-        let lastIndex = timers.count
-        guard timerIndex < lastIndex else { return }
-        
+    private func handleTimerAction(_ action: @escaping (UIActionTimer) -> Void) -> (UIActionTimer) -> Void {
         let startTime = CFAbsoluteTimeGetCurrent()
-        timer = timers[timerIndex]
-        timer?.schedule(action: { [weak self] _ in
+        
+        return { [weak self] _ in
             guard let self else { return }
             action(self)
             
             if CFAbsoluteTimeGetCurrent() - startTime >= accelerationInterval {
                 scheduleNextTimer(action: action)
             }
-        })
+        }
+    }
+    
+    private func scheduleNextTimer(action: @escaping (UIActionTimer) -> Void) {
+        timerIndex += 1
+        let lastIndex = timers.count
+        guard timerIndex < lastIndex else { return }
+        timer = timers[timerIndex]
+        timer?.schedule(action: handleTimerAction(action))
     }
 }
 
