@@ -8,8 +8,7 @@
 import Foundation
 
 class AcceleratingUIActionTimer: UIActionTimer {
-    struct InitializedWithEmptyTimers: Error {}
-    
+    private struct InitializedWithEmptyTimers: Error {}
     typealias AccelerationInterval = TimeInterval
     
     let accelerationInterval: AccelerationInterval
