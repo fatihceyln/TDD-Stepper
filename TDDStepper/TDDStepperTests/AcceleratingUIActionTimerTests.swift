@@ -26,6 +26,21 @@ class AcceleratingUIActionTimerTests: XCTestCase {
         XCTAssertEqual(currentTimer(in: sut), timer)
     }
     
+    func test_scheduleTwiceWithoutInvalidation_reschedulesFirstTimer() throws {
+        let firstTimer = TimerSpy()
+        let secondTimer = TimerSpy()
+        let sut = try makeSUT(timers: [firstTimer, secondTimer])
+        
+        sut.schedule { _ in }
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
+        
+        fireTimer(in: sut)
+        XCTAssertEqual(currentTimer(in: sut), secondTimer)
+        
+        sut.schedule { _ in }
+        XCTAssertEqual(currentTimer(in: sut), firstTimer)
+    }
+    
     func test_schedule_requestsSecondTimerAfterFirstTimerFires() throws {
         let firstTimer = TimerSpy()
         let secondTimer = TimerSpy()

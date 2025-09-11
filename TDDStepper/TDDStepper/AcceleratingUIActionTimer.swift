@@ -26,12 +26,12 @@ class AcceleratingUIActionTimer: UIActionTimer {
     }
     
     func schedule(action: @escaping (UIActionTimer) -> Void) {
+        timerIndex = .zero
         timer = timers.first
         timer?.schedule(action: handleTimerAction(action))
     }
     
     func invalidate() {
-        timerIndex = .zero
         timer?.invalidate()
     }
     
