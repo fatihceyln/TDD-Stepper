@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UIActionContinuation {
+final class UIActionContinuation {
     private let timer: UIActionTimer
     private(set) var isContinuing = false
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AcceleratingUIActionTimer: UIActionTimer {
+final class AcceleratingUIActionTimer: UIActionTimer {
     private struct InitializedWithEmptyTimers: Error {}
     typealias AccelerationInterval = TimeInterval
     

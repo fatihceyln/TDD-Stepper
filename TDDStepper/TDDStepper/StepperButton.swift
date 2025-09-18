@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StepperButton: UIButton {
+final class StepperButton: UIButton {
     override var intrinsicContentSize: CGSize {
         CGSize(width: 32, height: 32)
     }

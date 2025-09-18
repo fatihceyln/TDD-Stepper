@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class Stepper: UIControl {
+public final class Stepper: UIControl {
     public override var intrinsicContentSize: CGSize {
         CGSize(width: UIView.noIntrinsicMetric, height: 50)
     }
