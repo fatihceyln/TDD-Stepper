@@ -110,8 +110,6 @@ class StepperButtonTests: XCTestCase {
         trackForMemoryLeaks(sut)
         return (sut, timer)
     }
-    
-    
 }
 
 extension StepperButton {
