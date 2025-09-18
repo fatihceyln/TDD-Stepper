@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "9566BB85-296A-4B62-B9C3-95D4D0675CEF",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:TDDStepper.xcodeproj",
+          "identifier" : "3D0FEF0B2E69AD940032190F",
+          "name" : "TDDStepper"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TDDStepper.xcodeproj",
+        "identifier" : "3D0FEF2B2E69AE010032190F",
+        "name" : "TDDStepperTests"
+      }
+    }
+  ],
+  "version" : 1
+}
