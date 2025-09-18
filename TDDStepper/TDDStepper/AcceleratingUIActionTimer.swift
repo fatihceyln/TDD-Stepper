@@ -50,8 +50,7 @@ final class AcceleratingUIActionTimer: UIActionTimer {
     
     private func scheduleNextTimer(action: @escaping (UIActionTimer) -> Void) {
         timerIndex += 1
-        let lastIndex = timers.count
-        guard timerIndex < lastIndex else { return }
+        guard timerIndex < timers.endIndex else { return }
         timer = timers[timerIndex]
         timer?.schedule(action: handleTimerAction(action))
     }
