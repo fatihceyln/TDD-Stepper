@@ -19,7 +19,7 @@ public class Stepper: UIControl {
         set {
             stepperState.value = newValue
             textLabel.text = String(value)
-            updateButtons()
+            updateButtonStates()
             sendActions(for: .valueChanged)
         }
     }
@@ -65,7 +65,7 @@ public class Stepper: UIControl {
         layer.cornerRadius = 25
         
         textLabel.text = String(value)
-        updateButtons()
+        updateButtonStates()
         StepperLayout.configure(self)
     }
     
@@ -74,7 +74,7 @@ public class Stepper: UIControl {
         return fittingSize
     }
     
-    private func updateButtons() {
+    private func updateButtonStates() {
         decrementButton.isEnabled = value > minimumValue
         incrementButton.isEnabled = value < maximumValue
     }
