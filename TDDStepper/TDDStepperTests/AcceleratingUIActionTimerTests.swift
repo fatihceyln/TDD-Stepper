@@ -9,7 +9,7 @@ import XCTest
 @testable import TDDStepper
 
 class AcceleratingUIActionTimerTests: XCTestCase {
-    func test_init_throwsErrorWhenInitializedWithNoTimers() throws {
+    func test_init_throwsErrorWhenInitializedWithEmptyTimers() throws {
         XCTAssertThrowsError(try makeSUT(timers: []))
     }
     
