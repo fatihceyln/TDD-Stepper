@@ -5,9 +5,10 @@
 //  Created by Fatih Kilit on 18.09.2025.
 //
 
+import Foundation
 @testable import TDDStepper
 
-class UIActionTimerSpy: UIActionTimer {
+class UIActionTimerSpy: NSObject, UIActionTimer {
     private var action: ((UIActionTimer) -> Void)?
     var isScheduled: Bool {
         action != nil

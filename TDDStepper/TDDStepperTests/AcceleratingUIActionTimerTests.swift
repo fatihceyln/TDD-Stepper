@@ -14,11 +14,11 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     func test_init_doesNotThrowErrorWhenInitializedWithATimer() {
-        XCTAssertNoThrow(try makeSUT(timers: [TimerSpy()]))
+        XCTAssertNoThrow(try makeSUT(timers: [UIActionTimerSpy()]))
     }
     
     func test_schedule_requestsScheduleFromTimer() throws {
-        let timer = TimerSpy()
+        let timer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [timer])
         
         sut.schedule { _ in }
@@ -27,8 +27,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     func test_scheduleTwiceWithoutInvalidation_reschedulesFirstTimer() throws {
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
         sut.schedule { _ in }
@@ -42,8 +42,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     func test_schedule_requestsSecondTimerAfterFirstTimerFires() throws {
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
         sut.schedule { _ in }
@@ -55,8 +55,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     
     func test_schedule_requestsSecondTimerAfterAccelerationInterval() throws {
         let accelerationInterval = 0.1
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(accelerationInterval: accelerationInterval, timers: [firstTimer, secondTimer])
         
         sut.schedule { _ in }
@@ -74,9 +74,9 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     func test_schedule_requestsThirdTimerAfterSecondTimerFires() throws {
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
-        let thirdTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
+        let thirdTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer, thirdTimer])
         
         sut.schedule { _ in }
@@ -90,8 +90,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     }
     
     func test_schedule_invalidatesFirstTimerWhenSecondTimerIsRequested() throws {
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         
         sut.schedule { _ in }
@@ -99,13 +99,13 @@ class AcceleratingUIActionTimerTests: XCTestCase {
         
         fireTimer(in: sut)
         
-        XCTAssertEqual(firstTimer.isValid, false, "Expected first timer to be invalidated")
+        XCTAssertEqual(firstTimer.isScheduled, false, "Expected first timer to be not scheduled")
         XCTAssertEqual(currentTimer(in: sut), secondTimer, "Expected timer to be second timer")
     }
     
     func test_schedule_notifiesHandlerWhenTimerFires() throws {
         var eventCount = 0
-        let sut = try makeSUT(timers: [TimerSpy()])
+        let sut = try makeSUT(timers: [UIActionTimerSpy()])
         sut.schedule { _ in eventCount += 1 }
 
         fireTimer(in: sut)
@@ -120,8 +120,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     
     func test_schedule_notifiesHandlerWhenBothTimerFiresInOrder() throws {
         var eventCount = 0
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         sut.schedule { _ in eventCount += 1 }
 
@@ -140,8 +140,8 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     
     func test_schedule_doesNotNotifyHandlerAfterInvalidation() throws {
         var eventCount = 0
-        let firstTimer = TimerSpy()
-        let secondTimer = TimerSpy()
+        let firstTimer = UIActionTimerSpy()
+        let secondTimer = UIActionTimerSpy()
         let sut = try makeSUT(timers: [firstTimer, secondTimer])
         sut.schedule { _ in eventCount += 1 }
 
@@ -159,7 +159,7 @@ class AcceleratingUIActionTimerTests: XCTestCase {
     
     func test_scheduleAgainAfterInvalidation_notifiesHandler() throws {
         var eventCount = 0
-        let sut = try makeSUT(timers: [TimerSpy()])
+        let sut = try makeSUT(timers: [UIActionTimerSpy()])
         let handler: (UIActionTimer) -> Void = { _ in
             eventCount += 1
         }
@@ -185,31 +185,11 @@ class AcceleratingUIActionTimerTests: XCTestCase {
         return sut
     }
     
-    private class TimerSpy: NSObject, UIActionTimer {
-        private var action: ((UIActionTimer) -> Void)?
-        
-        var isValid: Bool {
-            action != nil
-        }
-        
-        func schedule(action: @escaping (UIActionTimer) -> Void) {
-            self.action = action
-        }
-        
-        func invalidate() {
-            action = nil
-        }
-        
-        func fire() {
-            action?(self)
-        }
-    }
-    
     private func fireTimer(in sut: AcceleratingUIActionTimer) {
-        (sut.timer as! TimerSpy).fire()
+        (sut.timer as! UIActionTimerSpy).fire()
     }
     
-    private func currentTimer(in sut: AcceleratingUIActionTimer) -> TimerSpy? {
-        sut.timer as? TimerSpy
+    private func currentTimer(in sut: AcceleratingUIActionTimer) -> UIActionTimerSpy? {
+        sut.timer as? UIActionTimerSpy
     }
 }
