@@ -63,29 +63,11 @@ class UIActionContinuationTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT() -> (sut: UIActionContinuation, timer: TimerSpy) {
-        let timer = TimerSpy()
+    private func makeSUT() -> (sut: UIActionContinuation, timer: UIActionTimerSpy) {
+        let timer = UIActionTimerSpy()
         let sut = UIActionContinuation(timer: timer)
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(timer)
         return (sut, timer)
-    }
-    
-    private final class TimerSpy: NSObject, UIActionTimer {
-        private var action: ((TimerSpy) -> Void)?
-        
-        var isScheduled: Bool { action != nil }
-        
-        func schedule(action: @escaping (UIActionTimer) -> Void) {
-            self.action = action
-        }
-        
-        func invalidate() {
-            action = nil
-        }
-        
-        func fire() {
-            action?(self)
-        }
     }
 }

@@ -102,8 +102,8 @@ class StepperButtonTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> (sut: StepperButton, timer: TimerSpy) {
-        let timer = TimerSpy()
+    private func makeSUT(isContinuous: Bool = true, file: StaticString = #filePath, line: UInt = #line) -> (sut: StepperButton, timer: UIActionTimerSpy) {
+        let timer = UIActionTimerSpy()
         let sut = StepperButton(continuation: UIActionContinuation(timer: timer))
         sut.isContinuous = isContinuous
         trackForMemoryLeaks(timer)
@@ -111,24 +111,7 @@ class StepperButtonTests: XCTestCase {
         return (sut, timer)
     }
     
-    private class TimerSpy: NSObject, UIActionTimer {
-        private var action: ((UIActionTimer) -> Void)?
-        var isScheduled: Bool {
-            action != nil
-        }
-        
-        func schedule(action: @escaping (UIActionTimer) -> Void) {
-            self.action = action
-        }
-        
-        func invalidate() {
-            action = nil
-        }
-        
-        func fire() {
-            action?(self)
-        }
-    }
+    
 }
 
 extension StepperButton {
